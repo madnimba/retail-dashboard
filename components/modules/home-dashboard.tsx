@@ -1,6 +1,6 @@
 "use client"
 
-import { AlertTriangle, Bell, TrendingUp, TrendingDown, Activity, BarChart3, Zap, Shield } from "lucide-react"
+import { AlertTriangle, Bell, TrendingUp, TrendingDown, Activity, BarChart3, Zap, Shield, Target, DollarSign, Users, Package, Globe, Clock, Settings, Download } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -12,6 +12,8 @@ import { ReportGeneratorModal } from "@/components/modals/report-generator-modal
 import { InventorySimulationModal } from "@/components/modals/inventory-simulation-modal"
 import { FxHedgingModal } from "@/components/modals/fx-hedging-modal"
 import { ForecastGeneratorModal } from "@/components/modals/forecast-generator-modal"
+import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"
+import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
 
 export function HomeDashboard() {
   const { notifications, unreadCount } = useNotifications()
@@ -24,6 +26,55 @@ export function HomeDashboard() {
   const [showInventoryModal, setShowInventoryModal] = useState(false)
   const [showFxModal, setShowFxModal] = useState(false)
   const [showForecastModal, setShowForecastModal] = useState(false)
+
+  // Performance data for charts
+  const monthlyPerformance = [
+    { month: "Jan", revenue: 6.2, ebitda: 1.8, orders: 12400, customers: 8900 },
+    { month: "Feb", revenue: 6.8, ebitda: 2.1, orders: 13100, customers: 9200 },
+    { month: "Mar", revenue: 7.1, ebitda: 2.3, orders: 13800, customers: 9500 },
+    { month: "Apr", revenue: 7.5, ebitda: 2.5, orders: 14500, customers: 9800 },
+    { month: "May", revenue: 7.9, ebitda: 2.7, orders: 15200, customers: 10100 },
+    { month: "Jun", revenue: 8.2, ebitda: 2.9, orders: 15900, customers: 10400 },
+    { month: "Jul", revenue: 8.6, ebitda: 3.1, orders: 16600, customers: 10700 },
+    { month: "Aug", revenue: 8.0, ebitda: 2.8, orders: 15900, customers: 10400 },
+  ]
+
+  const regionalPerformance = [
+    { region: "Noria", revenue: 4.2, growth: 12.5, stores: 8, avgOrder: 145 },
+    { region: "Southland", revenue: 3.8, growth: 8.3, stores: 6, avgOrder: 132 },
+  ]
+
+  const channelBreakdown = [
+    { name: "Proprietary", value: 52, color: "#3b82f6" },
+    { name: "Amazon", value: 29, color: "#f97316" },
+    { name: "Marketplaces", value: 19, color: "#8b5cf6" },
+  ]
+
+  const kpiTrends = [
+    { metric: "Revenue Growth", current: 15.2, target: 12.0, trend: "up" },
+    { metric: "Customer Acquisition", current: 8.7, target: 7.5, trend: "up" },
+    { metric: "Inventory Turnover", current: 4.2, target: 5.0, trend: "down" },
+    { metric: "Customer Satisfaction", current: 92.1, target: 90.0, trend: "up" },
+  ]
+
+  const chartConfig = {
+    revenue: {
+      label: "Revenue",
+      color: "#3b82f6",
+    },
+    ebitda: {
+      label: "EBITDA",
+      color: "#10b981",
+    },
+    orders: {
+      label: "Orders",
+      color: "#f59e0b",
+    },
+    customers: {
+      label: "Customers",
+      color: "#8b5cf6",
+    },
+  }
 
   return (
     <div className="p-8 space-y-8 bg-gradient-to-br from-slate-50 to-white min-h-screen">
@@ -168,62 +219,143 @@ export function HomeDashboard() {
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Risk Heatmap */}
+        {/* Comprehensive Performance Graph */}
         <Card className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-white/80 backdrop-blur-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
-              <div className="h-10 w-10 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center">
-                <Shield className="h-5 w-5 text-white" />
+              <div className="h-10 w-10 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                <BarChart3 className="h-5 w-5 text-white" />
               </div>
-              Risk Assessment Matrix
+              Comprehensive Performance Metrics
             </CardTitle>
-            <CardDescription>Real-time operational, financial, and market risk monitoring</CardDescription>
+            <CardDescription>Multi-dimensional business performance analysis</CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="p-5 rounded-xl bg-gradient-to-r from-red-50 to-red-100 border border-red-200 hover:shadow-md transition-all duration-200 cursor-pointer">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
-                  <span className="font-semibold text-red-900">Operational Risk</span>
-                  <Badge variant="destructive" className="ml-auto">
-                    Critical
-                  </Badge>
-                </div>
-                <p className="text-sm text-red-700 mb-2">Multiple inventory shortages detected across stores</p>
-                <div className="flex items-center justify-between text-xs text-red-600">
-                  <span>Impact: High</span>
-                  <span>Probability: 85%</span>
-                </div>
+          <CardContent className="space-y-6">
+            {/* Monthly Performance Chart */}
+            <div>
+              <h4 className="text-sm font-medium text-slate-700 mb-3">Monthly Performance Trends</h4>
+              <ChartContainer config={chartConfig} className="h-64">
+                <LineChart data={monthlyPerformance}>
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200" />
+                  <XAxis dataKey="month" className="text-xs" />
+                  <YAxis className="text-xs" />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Line 
+                    type="monotone" 
+                    dataKey="revenue" 
+                    stroke="#3b82f6" 
+                    strokeWidth={2}
+                    dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="ebitda" 
+                    stroke="#10b981" 
+                    strokeWidth={2}
+                    dot={{ fill: "#10b981", strokeWidth: 2, r: 4 }}
+                  />
+                </LineChart>
+              </ChartContainer>
+            </div>
+
+            {/* Regional Performance */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium text-slate-700">Regional Revenue</h4>
+                {regionalPerformance.map((region, index) => (
+                  <div key={region.region} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Globe className="h-4 w-4 text-slate-500" />
+                      <span className="text-sm font-medium">{region.region}</span>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-semibold">€{region.revenue}M</p>
+                      <p className={`text-xs ${region.growth > 10 ? 'text-green-600' : 'text-orange-600'}`}>
+                        +{region.growth}%
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
 
-              <div className="p-5 rounded-xl bg-gradient-to-r from-yellow-50 to-yellow-100 border border-yellow-200 hover:shadow-md transition-all duration-200 cursor-pointer">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
-                  <span className="font-semibold text-yellow-900">FX Risk</span>
-                  <Badge variant="secondary" className="ml-auto">
-                    Medium
-                  </Badge>
-                </div>
-                <p className="text-sm text-yellow-700 mb-2">USD/EUR volatility +2.3% - hedging recommended</p>
-                <div className="flex items-center justify-between text-xs text-yellow-600">
-                  <span>Impact: Medium</span>
-                  <span>Probability: 60%</span>
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium text-slate-700">Channel Distribution</h4>
+                <div className="h-32">
+                  <ChartContainer config={chartConfig}>
+                    <PieChart>
+                      <Pie
+                        data={channelBreakdown}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={30}
+                        outerRadius={60}
+                        paddingAngle={2}
+                        dataKey="value"
+                      >
+                        {channelBreakdown.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                    </PieChart>
+                  </ChartContainer>
                 </div>
               </div>
+            </div>
 
-              <div className="p-5 rounded-xl bg-gradient-to-r from-green-50 to-green-100 border border-green-200 hover:shadow-md transition-all duration-200 cursor-pointer">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-                  <span className="font-semibold text-green-900">Market Risk</span>
-                  <Badge variant="outline" className="ml-auto border-green-300 text-green-700">
-                    Low
-                  </Badge>
+            {/* KPI Performance Grid */}
+            <div>
+              <h4 className="text-sm font-medium text-slate-700 mb-3">KPI Performance vs Targets</h4>
+              <div className="grid grid-cols-2 gap-3">
+                {kpiTrends.map((kpi, index) => (
+                  <div key={kpi.metric} className="p-3 bg-slate-50 rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-medium text-slate-600">{kpi.metric}</span>
+                      <div className="flex items-center gap-1">
+                        {kpi.trend === "up" ? (
+                          <TrendingUp className="h-3 w-3 text-green-500" />
+                        ) : (
+                          <TrendingDown className="h-3 w-3 text-red-500" />
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-lg font-bold">{kpi.current}</span>
+                      <span className="text-xs text-slate-500">/ {kpi.target}</span>
+                    </div>
+                    <div className="mt-1">
+                      <Progress 
+                        value={(kpi.current / kpi.target) * 100} 
+                        className="h-1.5"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Performance Summary */}
+            <div className="grid grid-cols-3 gap-4 pt-4 border-t">
+              <div className="text-center">
+                <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full mx-auto mb-2">
+                  <Target className="h-4 w-4 text-blue-600" />
                 </div>
-                <p className="text-sm text-green-700 mb-2">Stable demand patterns across all regions</p>
-                <div className="flex items-center justify-between text-xs text-green-600">
-                  <span>Impact: Low</span>
-                  <span>Probability: 25%</span>
+                <p className="text-xs text-slate-600">Revenue Growth</p>
+                <p className="text-sm font-semibold text-green-600">+15.2%</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full mx-auto mb-2">
+                  <Users className="h-4 w-4 text-green-600" />
                 </div>
+                <p className="text-xs text-slate-600">Customer Growth</p>
+                <p className="text-sm font-semibold text-green-600">+8.7%</p>
+              </div>
+              <div className="text-center">
+                <div className="flex items-center justify-center w-8 h-8 bg-orange-100 rounded-full mx-auto mb-2">
+                  <Package className="h-4 w-4 text-orange-600" />
+                </div>
+                <p className="text-xs text-slate-600">Inventory Turn</p>
+                <p className="text-sm font-semibold text-orange-600">4.2x</p>
               </div>
             </div>
           </CardContent>
@@ -240,29 +372,142 @@ export function HomeDashboard() {
             </CardTitle>
             <CardDescription>Critical business events requiring immediate attention</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {recentAlerts.map((alert, index) => (
-              <Alert key={alert.id} className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertDescription>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <strong className="text-slate-900">{alert.title}:</strong>
-                      <p className="text-slate-700 mt-1">{alert.message}</p>
-                    </div>
-                    <Badge variant={alert.priority === "high" ? "destructive" : "secondary"} className="ml-2">
-                      {alert.priority}
-                    </Badge>
-                  </div>
-                </AlertDescription>
-              </Alert>
-            ))}
-            {recentAlerts.length === 0 && (
-              <div className="text-center py-8 text-slate-500">
-                <Bell className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>No active alerts</p>
+          <CardContent className="space-y-6">
+            {/* System Status Overview */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium text-slate-700">System Status</h4>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex items-center gap-2 p-2 bg-green-50 rounded-lg border border-green-200">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-xs font-medium text-green-700">CDMS Online</span>
+                </div>
+                <div className="flex items-center gap-2 p-2 bg-green-50 rounded-lg border border-green-200">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-xs font-medium text-green-700">Inventory Sync</span>
+                </div>
+                <div className="flex items-center gap-2 p-2 bg-yellow-50 rounded-lg border border-yellow-200">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                  <span className="text-xs font-medium text-yellow-700">FX Feed</span>
+                </div>
+                <div className="flex items-center gap-2 p-2 bg-green-50 rounded-lg border border-green-200">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-xs font-medium text-green-700">Analytics</span>
+                </div>
               </div>
-            )}
+            </div>
+
+            {/* Critical Alerts */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium text-slate-700">Critical Alerts</h4>
+              {recentAlerts.map((alert, index) => (
+                <Alert key={alert.id} className="border-0 shadow-sm hover:shadow-md transition-all duration-200">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <strong className="text-slate-900">{alert.title}:</strong>
+                        <p className="text-slate-700 mt-1">{alert.message}</p>
+                      </div>
+                      <Badge variant={alert.priority === "high" ? "destructive" : "secondary"} className="ml-2">
+                        {alert.priority}
+                      </Badge>
+                    </div>
+                  </AlertDescription>
+                </Alert>
+              ))}
+              {recentAlerts.length === 0 && (
+                <div className="text-center py-4 text-slate-500 bg-slate-50 rounded-lg">
+                  <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">No critical alerts</p>
+                </div>
+              )}
+            </div>
+
+            {/* Performance Alerts */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium text-slate-700">Performance Alerts</h4>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg border border-orange-200">
+                  <div className="flex items-center gap-2">
+                    <TrendingDown className="h-4 w-4 text-orange-600" />
+                    <div>
+                      <p className="text-sm font-medium text-orange-800">Inventory Turnover</p>
+                      <p className="text-xs text-orange-600">Below target (4.2x vs 5.0x)</p>
+                    </div>
+                  </div>
+                  <Badge variant="secondary" className="text-orange-700">Medium</Badge>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-green-600" />
+                    <div>
+                      <p className="text-sm font-medium text-green-800">Revenue Growth</p>
+                      <p className="text-xs text-green-600">Exceeding target (+15.2%)</p>
+                    </div>
+                  </div>
+                  <Badge variant="outline" className="border-green-300 text-green-700">Positive</Badge>
+                </div>
+
+                <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="flex items-center gap-2">
+                    <Users className="h-4 w-4 text-blue-600" />
+                    <div>
+                      <p className="text-sm font-medium text-blue-800">Customer Acquisition</p>
+                      <p className="text-xs text-blue-600">On track (+8.7% growth)</p>
+                    </div>
+                  </div>
+                  <Badge variant="outline" className="border-blue-300 text-blue-700">On Track</Badge>
+                </div>
+              </div>
+            </div>
+
+            {/* Recent Activities */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium text-slate-700">Recent Activities</h4>
+              <div className="space-y-2">
+                <div className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg transition-colors">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <div className="flex-1">
+                    <p className="text-xs font-medium text-slate-900">Forecast generated</p>
+                    <p className="text-xs text-slate-500">2 minutes ago</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg transition-colors">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <div className="flex-1">
+                    <p className="text-xs font-medium text-slate-900">Inventory updated</p>
+                    <p className="text-xs text-slate-500">5 minutes ago</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg transition-colors">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  <div className="flex-1">
+                    <p className="text-xs font-medium text-slate-900">New customer data</p>
+                    <p className="text-xs text-slate-500">12 minutes ago</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg transition-colors">
+                  <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                  <div className="flex-1">
+                    <p className="text-xs font-medium text-slate-900">FX rate updated</p>
+                    <p className="text-xs text-slate-500">18 minutes ago</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
+            {/* Notification Summary */}
+            <div className="pt-3 border-t">
+              <div className="flex items-center justify-between text-xs text-slate-500">
+                <span>Last updated: 2 minutes ago</span>
+                <span>{unreadCount} unread</span>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
