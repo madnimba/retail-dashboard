@@ -1,10 +1,13 @@
 "use client"
 
-import { MapPin, Star, TrendingUp } from "lucide-react"
+import { MapPin, Star, TrendingUp, AlertTriangle, Users, Clock, TrendingDown, Shield, Target, Zap, BarChart3 } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Progress } from "@/components/ui/progress"
 import { useState, useMemo } from "react"
 
 export function ConsumerAnalytics() {
@@ -140,6 +143,34 @@ export function ConsumerAnalytics() {
     }
   }, [selectedRegion, selectedAge])
 
+  // Generate churn risk data based on current filters
+  const churnRiskData = useMemo(() => {
+    const baseRisk = {
+      region: {
+        all: { riskLevel: "medium", riskScore: 65, customers: 1247, potentialLoss: 187000 },
+        noria: { riskLevel: "high", riskScore: 78, customers: 456, potentialLoss: 89000 },
+        southland: { riskLevel: "low", riskScore: 42, customers: 791, potentialLoss: 98000 }
+      },
+      age: {
+        all: { riskLevel: "medium", riskScore: 65, customers: 1247, potentialLoss: 187000 },
+        "18-25": { riskLevel: "low", riskScore: 38, customers: 234, potentialLoss: 35000 },
+        "26-35": { riskLevel: "medium", riskScore: 62, customers: 567, potentialLoss: 85000 },
+        "36-50": { riskLevel: "high", riskScore: 82, customers: 446, potentialLoss: 67000 }
+      }
+    }
+
+    const regionRisk = selectedRegion === "region" ? baseRisk.region.all : baseRisk.region[selectedRegion as keyof typeof baseRisk.region]
+    const ageRisk = selectedAge === "age" ? baseRisk.age.all : baseRisk.age[selectedAge as keyof typeof baseRisk.age]
+
+    return {
+      riskLevel: regionRisk.riskScore > 70 || ageRisk.riskScore > 70 ? "high" : 
+                 regionRisk.riskScore > 50 || ageRisk.riskScore > 50 ? "medium" : "low",
+      riskScore: Math.round((regionRisk.riskScore + ageRisk.riskScore) / 2),
+      customers: Math.round((regionRisk.customers + ageRisk.customers) / 2),
+      potentialLoss: Math.round((regionRisk.potentialLoss + ageRisk.potentialLoss) / 2)
+    }
+  }, [selectedRegion, selectedAge])
+
   return (
     <div className="p-4 sm:p-6 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -147,10 +178,146 @@ export function ConsumerAnalytics() {
           <h1 className="text-2xl sm:text-3xl font-bold">Consumer Analytics</h1>
           <p className="text-muted-foreground">CDMS-driven customer insights</p>
         </div>
-        <Button className="w-full sm:w-auto">
-          <TrendingUp className="h-4 w-4 mr-2" />
-          Predict Churn Risk
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="w-full sm:w-auto">
+              <TrendingUp className="h-4 w-4 mr-2" />
+              Predict Churn Risk
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-orange-500" />
+                Churn Risk Analysis
+              </DialogTitle>
+              <DialogDescription>
+                AI-powered customer retention insights based on current filters
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-6">
+              {/* Risk Overview */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-4 rounded-lg border">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">Risk Score</span>
+                    <Badge 
+                      variant={churnRiskData.riskLevel === "high" ? "destructive" : 
+                              churnRiskData.riskLevel === "medium" ? "secondary" : "default"}
+                      className={churnRiskData.riskLevel === "high" ? "bg-red-500" : 
+                               churnRiskData.riskLevel === "medium" ? "bg-yellow-500" : "bg-green-500"}
+                    >
+                      {churnRiskData.riskLevel.toUpperCase()}
+                    </Badge>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Risk Level</span>
+                      <span className="font-medium">{churnRiskData.riskScore}/100</span>
+                    </div>
+                    <Progress 
+                      value={churnRiskData.riskScore} 
+                      className="h-2"
+                      color={churnRiskData.riskLevel === "high" ? "bg-red-500" : 
+                             churnRiskData.riskLevel === "medium" ? "bg-yellow-500" : "bg-green-500"}
+                    />
+                  </div>
+                </div>
+                
+                <div className="p-4 rounded-lg border">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Users className="h-4 w-4 text-blue-500" />
+                    <span className="text-sm font-medium">At Risk Customers</span>
+                  </div>
+                  <p className="text-2xl font-bold text-red-600">{churnRiskData.customers.toLocaleString()}</p>
+                  <p className="text-sm text-muted-foreground">Potential churn</p>
+                </div>
+              </div>
+
+              {/* Financial Impact */}
+              <div className="p-4 rounded-lg bg-red-50 border border-red-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingDown className="h-4 w-4 text-red-600" />
+                  <span className="font-medium text-red-800">Potential Revenue Loss</span>
+                </div>
+                <p className="text-2xl font-bold text-red-700">€{churnRiskData.potentialLoss.toLocaleString()}</p>
+                <p className="text-sm text-red-600">If all at-risk customers churn</p>
+              </div>
+
+              {/* Risk Factors */}
+              <div className="space-y-3">
+                <h4 className="font-medium">Key Risk Factors</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg border border-orange-200">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-orange-600" />
+                      <span className="text-sm font-medium">Low Engagement</span>
+                    </div>
+                    <Badge variant="secondary" className="text-orange-700">High Impact</Badge>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                    <div className="flex items-center gap-2">
+                      <Target className="h-4 w-4 text-yellow-600" />
+                      <span className="text-sm font-medium">Price Sensitivity</span>
+                    </div>
+                    <Badge variant="secondary" className="text-yellow-700">Medium Impact</Badge>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="flex items-center gap-2">
+                      <Shield className="h-4 w-4 text-blue-600" />
+                      <span className="text-sm font-medium">Competitor Activity</span>
+                    </div>
+                    <Badge variant="secondary" className="text-blue-700">Low Impact</Badge>
+                  </div>
+                </div>
+              </div>
+
+              {/* Recommended Actions */}
+              <div className="space-y-3">
+                <h4 className="font-medium">Recommended Actions</h4>
+                <div className="space-y-2">
+                  <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                    <Zap className="h-4 w-4 text-green-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-green-800">Personalized Retention Campaign</p>
+                      <p className="text-xs text-green-600">Target high-value customers with exclusive offers</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <BarChart3 className="h-4 w-4 text-blue-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-blue-800">Engagement Optimization</p>
+                      <p className="text-xs text-blue-600">Improve customer touchpoints and communication</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg border border-purple-200">
+                    <Target className="h-4 w-4 text-purple-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-purple-800">Loyalty Program Enhancement</p>
+                      <p className="text-xs text-purple-600">Introduce tier-specific benefits and rewards</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Filter Context */}
+              <div className="p-3 bg-slate-50 rounded-lg border">
+                <p className="text-sm text-muted-foreground">
+                  Analysis based on: 
+                  <span className="font-medium ml-1">
+                    {selectedRegion !== "region" ? selectedRegion : "All Regions"}
+                    {selectedAge !== "age" && `, ${selectedAge}`}
+                  </span>
+                </p>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Demand Heatmaps */}
