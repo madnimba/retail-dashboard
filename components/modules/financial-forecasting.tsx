@@ -19,10 +19,10 @@ export function FinancialForecasting() {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-6 space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Financial Forecasting</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Financial Forecasting</h1>
           <p className="text-muted-foreground">Scenario modeling per phase</p>
         </div>
       </div>
@@ -91,7 +91,7 @@ export function FinancialForecasting() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div className="p-3 bg-gray-100 rounded-lg text-center">
                 <p className="text-sm text-muted-foreground">Current</p>
                 <p className="text-xl font-bold">€8M</p>
@@ -132,7 +132,7 @@ export function FinancialForecasting() {
           <CardDescription>Compare Noria 30% vs. Southland 22%</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-4 border rounded-lg">
               <h4 className="font-medium mb-2">Noria Operations</h4>
               <p className="text-2xl font-bold text-red-600">30%</p>

@@ -14,13 +14,13 @@ export function ScenarioSandbox() {
   const [turkeyProcurement, setTurkeyProcurement] = useState([70])
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-6 space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Scenario Sandbox</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Scenario Sandbox</h1>
           <p className="text-muted-foreground">Stress-test strategies</p>
         </div>
-        <Button>
+        <Button className="w-full sm:w-auto">
           <RotateCcw className="h-4 w-4 mr-2" />
           Reset All Scenarios
         </Button>
@@ -38,51 +38,51 @@ export function ScenarioSandbox() {
         <CardContent>
           <div className="space-y-4">
             <div className="p-4 border rounded-lg">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 gap-3">
                 <div>
                   <h4 className="font-medium">Recession in Noria</h4>
                   <p className="text-sm text-muted-foreground">Reduce CAPEX by 20%</p>
                 </div>
-                <Button size="sm">
+                <Button size="sm" className="w-full sm:w-auto">
                   <Play className="h-4 w-4 mr-2" />
                   Run Scenario
                 </Button>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 <Badge variant="destructive">Impact: High</Badge>
                 <span className="text-sm">Projected EBITDA: €10M (↓€4M)</span>
               </div>
             </div>
 
             <div className="p-4 border rounded-lg">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 gap-3">
                 <div>
                   <h4 className="font-medium">Cotton Price Surge</h4>
                   <p className="text-sm text-muted-foreground">+15% raw material costs</p>
                 </div>
-                <Button size="sm">
+                <Button size="sm" className="w-full sm:w-auto">
                   <Play className="h-4 w-4 mr-2" />
                   Run Scenario
                 </Button>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 <Badge variant="secondary">Impact: Medium</Badge>
                 <span className="text-sm">Adjusts COGS and NRV automatically</span>
               </div>
             </div>
 
             <div className="p-4 border rounded-lg">
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 gap-3">
                 <div>
                   <h4 className="font-medium">Supply Chain Disruption</h4>
                   <p className="text-sm text-muted-foreground">Asian suppliers +30 days lead time</p>
                 </div>
-                <Button size="sm">
+                <Button size="sm" className="w-full sm:w-auto">
                   <Play className="h-4 w-4 mr-2" />
                   Run Scenario
                 </Button>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 <Badge variant="destructive">Impact: High</Badge>
                 <span className="text-sm">Inventory shortage risk: 65%</span>
               </div>
@@ -174,7 +174,7 @@ export function ScenarioSandbox() {
           <CardDescription>What if we shift 70% of procurement to Turkey?</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
               <h4 className="font-medium text-green-800 mb-2">Cost Impact</h4>
               <p className="text-2xl font-bold text-green-600">-€2.1M</p>

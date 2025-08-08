@@ -8,13 +8,13 @@ import { Progress } from "@/components/ui/progress"
 
 export function SupplyChain() {
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-6 space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Supply Chain Command Center</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Supply Chain Command Center</h1>
           <p className="text-muted-foreground">Live operations monitoring</p>
         </div>
-        <Button>
+        <Button className="w-full sm:w-auto">
           <Package className="h-4 w-4 mr-2" />
           Find Regional Suppliers
         </Button>
@@ -31,7 +31,7 @@ export function SupplyChain() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="p-4 border rounded-lg">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium">Store #12</span>
@@ -84,14 +84,14 @@ export function SupplyChain() {
         <CardContent>
           <div className="space-y-4">
             <div className="grid grid-cols-1 gap-4">
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border rounded-lg gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div>
                     <h4 className="font-medium">Turkish Textile Co.</h4>
                     <p className="text-sm text-muted-foreground">Cotton & Denim</p>
                   </div>
-                  <div className="flex gap-2">
-                    <Badge variant="outline">Ethics: A+</Badge>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge className="bg-green-600 text-white hover:bg-green-700">Ethics: A+</Badge>
                     <Badge variant="secondary">Cost: €12/unit</Badge>
                   </div>
                 </div>
@@ -101,14 +101,14 @@ export function SupplyChain() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border rounded-lg gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div>
                     <h4 className="font-medium">Polish Manufacturing</h4>
                     <p className="text-sm text-muted-foreground">Outerwear & Accessories</p>
                   </div>
-                  <div className="flex gap-2">
-                    <Badge variant="outline">Ethics: B+</Badge>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge className="bg-yellow-600 text-black hover:bg-yellow-700">Ethics: B+</Badge>
                     <Badge variant="secondary">Cost: €18/unit</Badge>
                   </div>
                 </div>
@@ -129,7 +129,7 @@ export function SupplyChain() {
           <CardDescription>Net Realizable Value for write-down scenarios</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
               <h4 className="font-medium text-red-800">Slow-Moving Inventory</h4>
               <p className="text-2xl font-bold text-red-600">€125K</p>
@@ -154,7 +154,7 @@ export function SupplyChain() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-4 border rounded-lg">
                 <h4 className="font-medium mb-2">Turkey Route</h4>
                 <div className="space-y-2">

@@ -77,24 +77,24 @@ export function HomeDashboard() {
   }
 
   return (
-    <div className="p-8 space-y-8 bg-gradient-to-br from-slate-50 to-white min-h-screen">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-8 space-y-8 bg-gradient-to-br from-slate-50 to-white min-h-screen">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
             Executive Dashboard
           </h1>
           <p className="text-slate-600 mt-2">Real-time business intelligence and KPI monitoring</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <Button
             variant="outline"
-            className="shadow-sm hover:shadow-md transition-all duration-200 bg-transparent"
+            className="shadow-sm hover:shadow-md transition-all duration-200 bg-transparent w-full sm:w-auto"
             onClick={() => setShowReportModal(true)}
           >
             <BarChart3 className="h-4 w-4 mr-2" />
             Generate Report
           </Button>
-          <Button className="shadow-sm hover:shadow-md transition-all duration-200 bg-gradient-to-r from-blue-600 to-blue-700">
+          <Button className="shadow-sm hover:shadow-md transition-all duration-200 bg-gradient-to-r from-blue-600 to-blue-700 w-full sm:w-auto">
             <Zap className="h-4 w-4 mr-2" />
             Quick Actions
           </Button>
@@ -524,7 +524,7 @@ export function HomeDashboard() {
           <CardDescription>Execute critical business operations with one click</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <Button
               className="h-16 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-200"
               onClick={() => setShowInventoryModal(true)}

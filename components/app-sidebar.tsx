@@ -28,7 +28,7 @@ const modules = [
   },
   {
     id: "consumer",
-    title: "Consumer Intelligence",
+    title: "Consumer Insights",
     icon: Users,
     description: "CDMS Analytics & Insights",
     badge: null,
@@ -138,7 +138,7 @@ export function AppSidebar({ activeModule, setActiveModule }: AppSidebarProps) {
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <span className="text-sm font-semibold text-slate-900">John Doe</span>
+                <span className="text-sm font-semibold text-slate-900">Team Arctic Wolves</span>
                 <p className="text-xs text-slate-500">Chief Financial Officer</p>
               </div>
               <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600">

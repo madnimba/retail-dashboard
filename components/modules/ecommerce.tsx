@@ -9,13 +9,13 @@ import { Label } from "@/components/ui/label"
 
 export function ECommerce() {
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-6 space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">E-Commerce & Omnichannel</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">E-Commerce & Omnichannel</h1>
           <p className="text-muted-foreground">Digital performance hub</p>
         </div>
-        <Button>
+        <Button className="w-full sm:w-auto">
           <TrendingUp className="h-4 w-4 mr-2" />
           Dynamic Pricing Override
         </Button>
@@ -31,7 +31,7 @@ export function ECommerce() {
           <CardDescription>Revenue split across channels</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <Badge className="bg-orange-500">Amazon</Badge>
@@ -71,9 +71,9 @@ export function ECommerce() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-4 border rounded-lg">
-                <div className="flex justify-between items-center mb-2">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 gap-2">
                   <span className="font-medium">Store #12 (Noria)</span>
                   <Badge variant="outline">High Traffic</Badge>
                 </div>
@@ -82,7 +82,7 @@ export function ECommerce() {
                 <p className="text-xs text-muted-foreground mt-1">142 orders this week</p>
               </div>
               <div className="p-4 border rounded-lg">
-                <div className="flex justify-between items-center mb-2">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 gap-2">
                   <span className="font-medium">Store #08 (Southland)</span>
                   <Badge variant="secondary">Medium Traffic</Badge>
                 </div>
@@ -106,12 +106,12 @@ export function ECommerce() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border rounded-lg gap-4">
               <div>
                 <h4 className="font-medium">Premium Jeans - Model A</h4>
                 <p className="text-sm text-muted-foreground">Current: €89.99 → Suggested: €84.99</p>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
                 <div className="flex items-center space-x-2">
                   <Switch id="auto-adjust-1" />
                   <Label htmlFor="auto-adjust-1" className="text-sm">
@@ -124,12 +124,12 @@ export function ECommerce() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border rounded-lg gap-4">
               <div>
                 <h4 className="font-medium">Casual Hoodie - Model B</h4>
                 <p className="text-sm text-muted-foreground">Current: €45.99 → Suggested: €47.99</p>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
                 <div className="flex items-center space-x-2">
                   <Switch id="auto-adjust-2" defaultChecked />
                   <Label htmlFor="auto-adjust-2" className="text-sm">
@@ -155,7 +155,7 @@ export function ECommerce() {
           <CardDescription>Mobile commerce metrics</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="text-center">
               <p className="text-2xl font-bold">67%</p>
               <p className="text-sm text-muted-foreground">Mobile Traffic</p>
