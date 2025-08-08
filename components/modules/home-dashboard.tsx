@@ -1,6 +1,6 @@
 "use client"
 
-import { AlertTriangle, Bell, TrendingUp, TrendingDown, Activity, BarChart3, Zap, Shield, Target, DollarSign, Users, Package, Globe, Clock, Settings, Download } from "lucide-react"
+import { AlertTriangle, Bell, TrendingUp, TrendingDown, Activity, BarChart3, Zap, Shield, Target, DollarSign, Users, Package, Globe, Clock, Settings, Download, ChevronDown } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -14,6 +14,7 @@ import { FxHedgingModal } from "@/components/modals/fx-hedging-modal"
 import { ForecastGeneratorModal } from "@/components/modals/forecast-generator-modal"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export function HomeDashboard() {
   const { notifications, unreadCount } = useNotifications()
@@ -102,10 +103,30 @@ export function HomeDashboard() {
             <BarChart3 className="h-4 w-4 mr-2" />
             Generate Report
           </Button>
-          <Button className="shadow-sm hover:shadow-md transition-all duration-200 bg-gradient-to-r from-blue-600 to-blue-700 w-full sm:w-auto">
-            <Zap className="h-4 w-4 mr-2" />
-            Quick Actions
-          </Button>
+                     <DropdownMenu>
+             <DropdownMenuTrigger asChild>
+               <Button className="shadow-sm hover:shadow-md transition-all duration-200 bg-gradient-to-r from-blue-600 to-blue-700 w-full sm:w-auto">
+                 <Zap className="h-4 w-4 mr-2" />
+                 Quick Actions
+                 <ChevronDown className="h-4 w-4 ml-2" />
+               </Button>
+             </DropdownMenuTrigger>
+             <DropdownMenuContent align="end" className="w-56">
+               
+               <DropdownMenuItem onClick={() => setShowInventoryModal(true)}>
+                 <Activity className="h-4 w-4 mr-2" />
+                 Run Inventory Simulation
+               </DropdownMenuItem>
+               <DropdownMenuItem onClick={() => setShowFxModal(true)}>
+                 <TrendingDown className="h-4 w-4 mr-2" />
+                 Hedge FX Exposure
+               </DropdownMenuItem>
+               <DropdownMenuItem onClick={() => setShowForecastModal(true)}>
+                 <BarChart3 className="h-4 w-4 mr-2" />
+                 Generate Forecast
+               </DropdownMenuItem>
+             </DropdownMenuContent>
+           </DropdownMenu>
         </div>
       </div>
 
@@ -242,7 +263,7 @@ export function HomeDashboard() {
             {/* Monthly Performance Chart */}
             <div>
               <h4 className="text-sm font-medium text-slate-700 mb-3">Monthly Performance Trends</h4>
-              <ChartContainer config={chartConfig} className="h-64">
+              <ChartContainer config={chartConfig} className="h-48 sm:h-64">
                 <LineChart data={monthlyPerformance}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200" />
                   <XAxis dataKey="month" className="text-xs" />
@@ -267,7 +288,7 @@ export function HomeDashboard() {
             </div>
 
             {/* Regional Performance */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-3">
                 <h4 className="text-sm font-medium text-slate-700">Regional Revenue</h4>
                 {regionalPerformance.map((region, index) => (
@@ -288,15 +309,15 @@ export function HomeDashboard() {
 
               <div className="space-y-3">
                 <h4 className="text-sm font-medium text-slate-700">Channel Distribution</h4>
-                <div className="h-32">
+                <div className="h-32 sm:h-40">
                   <ChartContainer config={chartConfig}>
                     <PieChart>
                       <Pie
                         data={channelBreakdown}
                         cx="50%"
                         cy="50%"
-                        innerRadius={30}
-                        outerRadius={60}
+                        innerRadius={20}
+                        outerRadius={40}
                         paddingAngle={2}
                         dataKey="value"
                       >
@@ -314,7 +335,7 @@ export function HomeDashboard() {
             {/* KPI Performance Grid */}
             <div>
               <h4 className="text-sm font-medium text-slate-700 mb-3">KPI Performance vs Targets</h4>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {kpiTrends.map((kpi, index) => (
                   <div key={kpi.metric} className="p-3 bg-slate-50 rounded-lg">
                     <div className="flex items-center justify-between mb-2">
@@ -343,7 +364,7 @@ export function HomeDashboard() {
             </div>
 
             {/* Performance Summary */}
-            <div className="grid grid-cols-3 gap-4 pt-4 border-t">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t">
               <div className="text-center">
                 <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full mx-auto mb-2">
                   <Target className="h-4 w-4 text-blue-600" />
@@ -384,7 +405,7 @@ export function HomeDashboard() {
             {/* System Status Overview */}
             <div className="space-y-3">
               <h4 className="text-sm font-medium text-slate-700">System Status</h4>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="flex items-center gap-2 p-2 bg-green-50 rounded-lg border border-green-200">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <span className="text-xs font-medium text-green-700">CDMS Online</span>
@@ -435,7 +456,7 @@ export function HomeDashboard() {
             <div className="space-y-3">
               <h4 className="text-sm font-medium text-slate-700">Performance Alerts</h4>
               <div className="space-y-2">
-                <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg border border-orange-200">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 bg-orange-50 rounded-lg border border-orange-200 gap-2">
                   <div className="flex items-center gap-2">
                     <TrendingDown className="h-4 w-4 text-orange-600" />
                     <div>
@@ -443,10 +464,10 @@ export function HomeDashboard() {
                       <p className="text-xs text-orange-600">Below target (4.2x vs 5.0x)</p>
                     </div>
                   </div>
-                  <Badge variant="secondary" className="text-orange-700">Medium</Badge>
+                  <Badge variant="secondary" className="text-orange-700 w-fit">Medium</Badge>
                 </div>
                 
-                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 bg-green-50 rounded-lg border border-green-200 gap-2">
                   <div className="flex items-center gap-2">
                     <TrendingUp className="h-4 w-4 text-green-600" />
                     <div>
@@ -454,10 +475,10 @@ export function HomeDashboard() {
                       <p className="text-xs text-green-600">Exceeding target (+15.2%)</p>
                     </div>
                   </div>
-                  <Badge variant="outline" className="border-green-300 text-green-700">Positive</Badge>
+                  <Badge variant="outline" className="border-green-300 text-green-700 w-fit">Positive</Badge>
                 </div>
 
-                <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 bg-blue-50 rounded-lg border border-blue-200 gap-2">
                   <div className="flex items-center gap-2">
                     <Users className="h-4 w-4 text-blue-600" />
                     <div>
@@ -465,7 +486,7 @@ export function HomeDashboard() {
                       <p className="text-xs text-blue-600">On track (+8.7% growth)</p>
                     </div>
                   </div>
-                  <Badge variant="outline" className="border-blue-300 text-blue-700">On Track</Badge>
+                  <Badge variant="outline" className="border-blue-300 text-blue-700 w-fit">On Track</Badge>
                 </div>
               </div>
             </div>

@@ -165,9 +165,9 @@ export function ConsumerAnalytics() {
         <CardContent>
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-4">
-              <Select defaultValue="region">
+              <Select value={selectedRegion} onValueChange={setSelectedRegion}>
                 <SelectTrigger className="w-full sm:w-48">
-                  <SelectValue />
+                  <SelectValue placeholder="Select Region" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="region">All Regions</SelectItem>
@@ -175,9 +175,9 @@ export function ConsumerAnalytics() {
                   <SelectItem value="southland">Southland</SelectItem>
                 </SelectContent>
               </Select>
-              <Select defaultValue="age">
+              <Select value={selectedAge} onValueChange={setSelectedAge}>
                 <SelectTrigger className="w-full sm:w-48">
-                  <SelectValue />
+                  <SelectValue placeholder="Select Age" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="age">All Ages</SelectItem>
@@ -189,18 +189,26 @@ export function ConsumerAnalytics() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-4 rounded-lg bg-blue-50 border">
-                <h4 className="font-medium">Southland - Hoodies</h4>
+                <h4 className="font-medium">Hoodies</h4>
                 <p className={`text-2xl font-bold ${analyticsData.hoodies.trend === "positive" ? "text-green-600" : "text-red-600"}`}>
                   {analyticsData.hoodies.growth > 0 ? "+" : ""}{analyticsData.hoodies.growth}%
                 </p>
                 <p className="text-sm text-muted-foreground">vs last quarter</p>
+                <div className="mt-2 text-xs text-muted-foreground">
+                  {selectedRegion !== "region" && `Region: ${selectedRegion}`}
+                  {selectedAge !== "age" && ` | Age: ${selectedAge}`}
+                </div>
               </div>
               <div className="p-4 rounded-lg bg-purple-50 border">
-                <h4 className="font-medium">Noria - Jeans</h4>
+                <h4 className="font-medium">Jeans</h4>
                 <p className={`text-2xl font-bold ${analyticsData.jeans.trend === "positive" ? "text-green-600" : "text-red-600"}`}>
                   {analyticsData.jeans.growth > 0 ? "+" : ""}{analyticsData.jeans.growth}%
                 </p>
                 <p className="text-sm text-muted-foreground">vs last quarter</p>
+                <div className="mt-2 text-xs text-muted-foreground">
+                  {selectedRegion !== "region" && `Region: ${selectedRegion}`}
+                  {selectedAge !== "age" && ` | Age: ${selectedAge}`}
+                </div>
               </div>
             </div>
           </div>
