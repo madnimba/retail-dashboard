@@ -77,8 +77,8 @@ export function AppSidebar({ activeModule, setActiveModule }: AppSidebarProps) {
             <TrendingUp className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold">RetailBI Pro</h2>
-            <p className="text-xs text-slate-300">Business Intelligence Suite</p>
+            <h2 className="text-xl font-bold">SmartWear</h2>
+            <p className="text-xs text-slate-300">by Team Arctic Wolves</p>
           </div>
         </div>
       </SidebarHeader>

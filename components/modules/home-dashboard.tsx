@@ -80,8 +80,16 @@ export function HomeDashboard() {
     <div className="p-4 sm:p-8 space-y-8 bg-gradient-to-br from-slate-50 to-white min-h-screen">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
-            Executive Dashboard
+          <h1 className="text-2xl sm:text-3xl font-bold">
+            <div className="bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
+              SmartWear Executive
+            </div>
+            <div className="text-lg sm:text-xl font-medium text-slate-600 mt-1">
+              By{" "}
+              <span className="bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent font-semibold">
+                Team Arctic Wolves
+              </span>
+            </div>
           </h1>
           <p className="text-slate-600 mt-2">Real-time business intelligence and KPI monitoring</p>
         </div>
