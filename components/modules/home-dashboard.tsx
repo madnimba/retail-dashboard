@@ -137,12 +137,20 @@ export function HomeDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="max-[420px]:text-[0.9375rem] max-[420px]:tracking-tighter text-lg leading-tight tracking-tight sm:text-xl md:text-2xl lg:text-3xl font-bold text-slate-900">
+          <h1 className="max-[420px]:text-[0.9375rem] max-[420px]:tracking-tighter text-xl leading-tight tracking-tight sm:text-2xl md:text-2xl lg:text-3xl font-bold text-slate-900">
             Yamaha Global Supply Chain OS
           </h1>
-          <p className="mt-1.5 text-sm sm:text-base font-semibold italic tracking-[0.12em] text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-sky-600">
-            — by Arctic Wolves
-          </p>
+          <div className="mt-2 flex items-center gap-2.5">
+            <span
+              className="h-5 w-1 shrink-0 rounded-full bg-gradient-to-b from-cyan-300 via-blue-600 to-indigo-800 shadow-[0_0_12px_rgba(37,99,235,0.35)]"
+              aria-hidden
+            />
+            <span className="inline-flex items-center rounded-lg bg-gradient-to-r from-slate-100/95 via-sky-50/90 to-indigo-50/95 px-3 py-1.5 ring-1 ring-slate-200/80 shadow-sm">
+              <span className="text-base sm:text-lg font-semibold tracking-[0.055em] text-transparent bg-clip-text bg-gradient-to-r from-slate-950 via-blue-800 to-indigo-700">
+                — by Arctic Wolves
+              </span>
+            </span>
+          </div>
           <div className="flex items-center gap-3 mt-2">
             <p className="text-slate-600">Executive Dashboard</p>
             <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
