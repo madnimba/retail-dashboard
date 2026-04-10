@@ -138,7 +138,7 @@ export function HomeDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <div className="max-[420px]:text-[0.9375rem] max-[420px]:tracking-tighter text-lg font-bold leading-tight tracking-tight text-slate-900 sm:text-xl md:text-2xl lg:text-3xl">
+          <div className="max-[420px]:text-[0.9375rem] max-[420px]:tracking-tighter text-xl font-bold leading-tight tracking-tight text-slate-900 sm:text-3xl md:text-2xl lg:text-3xl">
             <div className="flex min-w-0 items-center gap-2 sm:gap-2.5 md:gap-3">
               <Image
                 src="/yamaha.jpeg"
