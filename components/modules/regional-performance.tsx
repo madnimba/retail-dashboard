@@ -1,457 +1,471 @@
 "use client"
 
 import { useState } from "react"
-import { Globe, MapPin, TrendingUp, TrendingDown, Clock, DollarSign, Factory, Users, ChevronRight, ArrowUpRight, ArrowDownRight, Building, Truck, Shield } from "lucide-react"
+import { Globe, MapPin, TrendingUp, TrendingDown, Clock, DollarSign, Factory, Users, ChevronRight, ArrowUpRight, ArrowDownRight, Shield, Truck, AlertTriangle, Check } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts"
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts"
 
 type RegionKey = "southeast-asia" | "turkey" | "morocco" | "brazil"
-type CountryKey = string
-
-interface CountryData {
-  name: string
-  costPerUnit: number
-  leadTime: number
-  capacityUtil: number
-  supplierReliability: number
-  facilities: number
-  employees: number
-  yearlyVolume: string
-  status: string
-}
-
-interface RegionData {
-  name: string
-  totalCost: number
-  avgLeadTime: number
-  capacityUtil: number
-  supplierReliability: number
-  countries: CountryData[]
-  trends: { month: string; cost: number; leadTime: number }[]
-}
 
 export function RegionalPerformance() {
-  const [selectedRegion, setSelectedRegion] = useState<RegionKey>("southeast-asia")
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null)
+  const [selectedRegion, setSelectedRegion] = useState<RegionKey | null>(null)
 
-  const regionData: Record<RegionKey, RegionData> = {
+  // 4 Key Regional Hubs
+  const regions: Record<RegionKey, {
+    name: string
+    status: string
+    statusColor: string
+    annualCost: number
+    costPerUnit: number
+    leadTime: number
+    capacity: number
+    reliability: number
+    facilities: number
+    employees: number
+    keyProducts: string[]
+    strengths: string[]
+    challenges: string[]
+    trend: { metric: string; change: number; direction: "up" | "down" }[]
+  }> = {
     "southeast-asia": {
       name: "Southeast Asia",
-      totalCost: 312,
-      avgLeadTime: 28,
-      capacityUtil: 82,
-      supplierReliability: 94,
-      countries: [
-        { name: "Vietnam", costPerUnit: 12.40, leadTime: 26, capacityUtil: 88, supplierReliability: 96, facilities: 8, employees: 12400, yearlyVolume: "$124M", status: "Expanding" },
-        { name: "Thailand", costPerUnit: 14.20, leadTime: 24, capacityUtil: 79, supplierReliability: 93, facilities: 5, employees: 8200, yearlyVolume: "$98M", status: "Stable" },
-        { name: "Indonesia", costPerUnit: 11.80, leadTime: 32, capacityUtil: 71, supplierReliability: 89, facilities: 6, employees: 9800, yearlyVolume: "$78M", status: "At Risk" },
-        { name: "Malaysia", costPerUnit: 15.60, leadTime: 22, capacityUtil: 85, supplierReliability: 97, facilities: 3, employees: 4200, yearlyVolume: "$56M", status: "Premium" },
-      ],
-      trends: [
-        { month: "Jan", cost: 13.2, leadTime: 29 },
-        { month: "Feb", cost: 12.8, leadTime: 28 },
-        { month: "Mar", cost: 13.5, leadTime: 30 },
-        { month: "Apr", cost: 12.4, leadTime: 27 },
-        { month: "May", cost: 12.1, leadTime: 26 },
-        { month: "Jun", cost: 12.6, leadTime: 28 },
+      status: "Operational",
+      statusColor: "green",
+      annualCost: 312,
+      costPerUnit: 12.80,
+      leadTime: 28,
+      capacity: 82,
+      reliability: 94,
+      facilities: 22,
+      employees: 34600,
+      keyProducts: ["Motorcycles", "Marine Engines", "Electronic Components"],
+      strengths: ["Low labor cost", "Established supplier network", "High volume capacity"],
+      challenges: ["Long lead times to EU/US", "Port congestion risk", "Typhoon season disruptions"],
+      trend: [
+        { metric: "Cost/Unit", change: -4.2, direction: "down" },
+        { metric: "Lead Time", change: -2, direction: "down" },
+        { metric: "Capacity", change: 5, direction: "up" },
       ]
     },
     "turkey": {
       name: "Turkey",
-      totalCost: 245,
-      avgLeadTime: 18,
-      capacityUtil: 91,
-      supplierReliability: 97,
-      countries: [
-        { name: "Istanbul Region", costPerUnit: 16.80, leadTime: 16, capacityUtil: 94, supplierReliability: 98, facilities: 12, employees: 18600, yearlyVolume: "$156M", status: "Premium" },
-        { name: "Izmir Region", costPerUnit: 15.20, leadTime: 18, capacityUtil: 89, supplierReliability: 96, facilities: 8, employees: 11200, yearlyVolume: "$89M", status: "Expanding" },
-        { name: "Bursa Region", costPerUnit: 14.60, leadTime: 20, capacityUtil: 86, supplierReliability: 95, facilities: 5, employees: 7400, yearlyVolume: "$64M", status: "Stable" },
-      ],
-      trends: [
-        { month: "Jan", cost: 16.2, leadTime: 19 },
-        { month: "Feb", cost: 15.8, leadTime: 18 },
-        { month: "Mar", cost: 15.4, leadTime: 17 },
-        { month: "Apr", cost: 15.9, leadTime: 18 },
-        { month: "May", cost: 15.6, leadTime: 17 },
-        { month: "Jun", cost: 15.2, leadTime: 16 },
+      status: "Expanding",
+      statusColor: "blue",
+      annualCost: 245,
+      costPerUnit: 15.60,
+      leadTime: 16,
+      capacity: 91,
+      reliability: 97,
+      facilities: 25,
+      employees: 37200,
+      keyProducts: ["Musical Instruments", "Audio Equipment", "Textiles"],
+      strengths: ["EU proximity (12 days)", "High quality standards", "Skilled workforce"],
+      challenges: ["Currency volatility (TRY)", "Higher labor costs", "Capacity constraints"],
+      trend: [
+        { metric: "Cost/Unit", change: -2.8, direction: "down" },
+        { metric: "Lead Time", change: -3, direction: "down" },
+        { metric: "Capacity", change: 8, direction: "up" },
       ]
     },
     "morocco": {
       name: "Morocco",
-      totalCost: 178,
-      avgLeadTime: 14,
-      capacityUtil: 68,
-      supplierReliability: 91,
-      countries: [
-        { name: "Casablanca Region", costPerUnit: 13.40, leadTime: 12, capacityUtil: 74, supplierReliability: 93, facilities: 6, employees: 8900, yearlyVolume: "$98M", status: "Expanding" },
-        { name: "Tangier Region", costPerUnit: 12.80, leadTime: 14, capacityUtil: 71, supplierReliability: 90, facilities: 4, employees: 5600, yearlyVolume: "$62M", status: "Developing" },
-        { name: "Marrakech Region", costPerUnit: 14.20, leadTime: 18, capacityUtil: 58, supplierReliability: 88, facilities: 2, employees: 2800, yearlyVolume: "$28M", status: "Pilot" },
-      ],
-      trends: [
-        { month: "Jan", cost: 14.8, leadTime: 16 },
-        { month: "Feb", cost: 14.2, leadTime: 15 },
-        { month: "Mar", cost: 13.8, leadTime: 14 },
-        { month: "Apr", cost: 13.4, leadTime: 14 },
-        { month: "May", cost: 13.2, leadTime: 13 },
-        { month: "Jun", cost: 13.0, leadTime: 12 },
+      status: "Developing",
+      statusColor: "amber",
+      annualCost: 178,
+      costPerUnit: 13.40,
+      leadTime: 12,
+      capacity: 68,
+      reliability: 91,
+      facilities: 12,
+      employees: 17300,
+      keyProducts: ["Auto Parts", "Cables & Wiring", "Small Engines"],
+      strengths: ["EU free trade zone", "Lowest lead time to EU", "Competitive costs"],
+      challenges: ["Limited capacity", "Developing supplier base", "Infrastructure gaps"],
+      trend: [
+        { metric: "Cost/Unit", change: -6.1, direction: "down" },
+        { metric: "Lead Time", change: -4, direction: "down" },
+        { metric: "Capacity", change: 12, direction: "up" },
       ]
     },
     "brazil": {
       name: "Brazil",
-      totalCost: 112,
-      avgLeadTime: 8,
-      capacityUtil: 45,
-      supplierReliability: 86,
-      countries: [
-        { name: "Sao Paulo Region", costPerUnit: 18.60, leadTime: 6, capacityUtil: 52, supplierReliability: 89, facilities: 3, employees: 4200, yearlyVolume: "$68M", status: "Expanding" },
-        { name: "Minas Gerais", costPerUnit: 17.20, leadTime: 8, capacityUtil: 44, supplierReliability: 85, facilities: 2, employees: 2400, yearlyVolume: "$34M", status: "Developing" },
-        { name: "Rio Grande do Sul", costPerUnit: 19.40, leadTime: 10, capacityUtil: 38, supplierReliability: 82, facilities: 1, employees: 1200, yearlyVolume: "$18M", status: "Pilot" },
-      ],
-      trends: [
-        { month: "Jan", cost: 19.8, leadTime: 10 },
-        { month: "Feb", cost: 19.2, leadTime: 9 },
-        { month: "Mar", cost: 18.6, leadTime: 9 },
-        { month: "Apr", cost: 18.2, leadTime: 8 },
-        { month: "May", cost: 17.8, leadTime: 8 },
-        { month: "Jun", cost: 17.4, leadTime: 7 },
+      status: "Pilot",
+      statusColor: "slate",
+      annualCost: 112,
+      costPerUnit: 18.20,
+      leadTime: 8,
+      capacity: 45,
+      reliability: 86,
+      facilities: 6,
+      employees: 7800,
+      keyProducts: ["Outboard Motors", "Generators", "Motorcycles (Americas)"],
+      strengths: ["Americas market access", "Lowest lead time", "Growing domestic market"],
+      challenges: ["Highest cost/unit", "Developing operations", "Currency risk (BRL)"],
+      trend: [
+        { metric: "Cost/Unit", change: -3.4, direction: "down" },
+        { metric: "Lead Time", change: -1, direction: "down" },
+        { metric: "Capacity", change: 15, direction: "up" },
       ]
     }
   }
 
-  const currentRegion = regionData[selectedRegion]
-  const currentCountry = selectedCountry 
-    ? currentRegion.countries.find((c: CountryData) => c.name === selectedCountry) 
-    : null
+  // Comparison data for chart
+  const comparisonData = Object.entries(regions).map(([key, region]) => ({
+    name: region.name.split(" ")[0],
+    costPerUnit: region.costPerUnit,
+    leadTime: region.leadTime,
+    capacity: region.capacity,
+    reliability: region.reliability,
+  }))
 
   const chartConfig = {
-    cost: { label: "Cost ($/unit)", color: "#3b82f6" },
-    leadTime: { label: "Lead Time (days)", color: "#10b981" },
+    costPerUnit: { label: "Cost/Unit ($)", color: "#3b82f6" },
+    leadTime: { label: "Lead Time (days)", color: "#f59e0b" },
   }
 
-  const radarData = currentRegion.countries.map((country: CountryData) => ({
-    name: country.name.split(" ")[0],
-    cost: 100 - (country.costPerUnit / 20 * 100),
-    leadTime: 100 - (country.leadTime / 35 * 100),
-    capacity: country.capacityUtil,
-    reliability: country.supplierReliability,
-  }))
+  const selectedRegionData = selectedRegion ? regions[selectedRegion] : null
 
   return (
     <div className="p-4 sm:p-6 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold">Regional Performance</h1>
-          <p className="text-muted-foreground">Manufacturing hub analytics and drill-down</p>
+          <p className="text-muted-foreground">Compare and analyze 4 manufacturing hubs</p>
         </div>
-        <Select value={selectedRegion} onValueChange={(v) => { setSelectedRegion(v as RegionKey); setSelectedCountry(null); }}>
-          <SelectTrigger className="w-full sm:w-[240px]">
-            <SelectValue placeholder="Select Region" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="southeast-asia">Southeast Asia</SelectItem>
-            <SelectItem value="turkey">Turkey</SelectItem>
-            <SelectItem value="morocco">Morocco</SelectItem>
-            <SelectItem value="brazil">Brazil</SelectItem>
-          </SelectContent>
-        </Select>
+        {selectedRegion && (
+          <Button variant="outline" onClick={() => setSelectedRegion(null)} className="bg-transparent">
+            View All Regions
+          </Button>
+        )}
       </div>
 
-      {/* Region Overview KPIs */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="hover:shadow-lg transition-all">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Cost per Unit</p>
-                <p className="text-2xl font-bold">${(currentRegion.totalCost / 20).toFixed(2)}</p>
-                <div className="flex items-center gap-1 mt-1">
-                  <ArrowDownRight className="h-4 w-4 text-green-500" />
-                  <span className="text-xs text-green-600">-4.2% vs target</span>
-                </div>
-              </div>
-              <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
-                <DollarSign className="h-6 w-6 text-blue-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-all">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Lead Time</p>
-                <p className="text-2xl font-bold">{currentRegion.avgLeadTime} days</p>
-                <div className="flex items-center gap-1 mt-1">
-                  <ArrowDownRight className="h-4 w-4 text-green-500" />
-                  <span className="text-xs text-green-600">-2 days vs Q1</span>
-                </div>
-              </div>
-              <div className="h-12 w-12 bg-amber-100 rounded-full flex items-center justify-center">
-                <Clock className="h-6 w-6 text-amber-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-all">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Capacity Utilization</p>
-                <p className="text-2xl font-bold">{currentRegion.capacityUtil}%</p>
-                <Progress value={currentRegion.capacityUtil} className="h-2 mt-2" />
-              </div>
-              <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
-                <Factory className="h-6 w-6 text-green-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-all">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Supplier Reliability</p>
-                <p className="text-2xl font-bold">{currentRegion.supplierReliability}%</p>
-                <div className="flex items-center gap-1 mt-1">
-                  <ArrowUpRight className="h-4 w-4 text-green-500" />
-                  <span className="text-xs text-green-600">+1.2% vs target</span>
-                </div>
-              </div>
-              <div className="h-12 w-12 bg-indigo-100 rounded-full flex items-center justify-center">
-                <Shield className="h-6 w-6 text-indigo-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Country/Sub-region Drill-down */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MapPin className="h-5 w-5" />
-              {currentRegion.name} - Sub-regions
-            </CardTitle>
-            <CardDescription>Click to view detailed performance</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {currentRegion.countries.map((country: CountryData) => (
-                <div 
-                  key={country.name}
-                  className={`p-4 border rounded-lg cursor-pointer transition-all hover:shadow-md ${
-                    selectedCountry === country.name ? "border-blue-500 bg-blue-50" : "hover:border-blue-300"
-                  }`}
-                  onClick={() => setSelectedCountry(selectedCountry === country.name ? null : country.name)}
-                >
-                  <div className="flex items-center justify-between mb-2">
+      {/* Regional Comparison Grid */}
+      {!selectedRegion && (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {(Object.entries(regions) as [RegionKey, typeof regions[RegionKey]][]).map(([key, region]) => (
+              <Card 
+                key={key}
+                className="cursor-pointer hover:shadow-lg transition-all hover:border-blue-300"
+                onClick={() => setSelectedRegion(key)}
+              >
+                <CardContent className="p-5">
+                  <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                      <Building className="h-4 w-4 text-slate-500" />
-                      <span className="font-medium">{country.name}</span>
+                      <MapPin className="h-4 w-4 text-slate-500" />
+                      <span className="font-semibold">{region.name}</span>
                     </div>
                     <Badge 
                       variant="outline" 
                       className={
-                        country.status === "Premium" ? "bg-indigo-50 text-indigo-700 border-indigo-200" :
-                        country.status === "Expanding" ? "bg-green-50 text-green-700 border-green-200" :
-                        country.status === "Stable" ? "bg-blue-50 text-blue-700 border-blue-200" :
-                        country.status === "At Risk" ? "bg-red-50 text-red-700 border-red-200" :
-                        country.status === "Developing" ? "bg-amber-50 text-amber-700 border-amber-200" :
+                        region.statusColor === "green" ? "bg-green-50 text-green-700 border-green-200" :
+                        region.statusColor === "blue" ? "bg-blue-50 text-blue-700 border-blue-200" :
+                        region.statusColor === "amber" ? "bg-amber-50 text-amber-700 border-amber-200" :
                         "bg-slate-50 text-slate-700 border-slate-200"
                       }
                     >
-                      {country.status}
+                      {region.status}
                     </Badge>
                   </div>
-                  <div className="grid grid-cols-4 gap-2 text-sm">
-                    <div>
-                      <span className="text-muted-foreground">Cost</span>
-                      <p className="font-medium">${country.costPerUnit}</p>
+
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Annual Cost</span>
+                      <span className="font-bold text-lg">${region.annualCost}M</span>
                     </div>
-                    <div>
-                      <span className="text-muted-foreground">Lead Time</span>
-                      <p className="font-medium">{country.leadTime}d</p>
+                    
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <p className="text-muted-foreground">Cost/Unit</p>
+                        <p className="font-medium">${region.costPerUnit}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Lead Time</p>
+                        <p className="font-medium">{region.leadTime} days</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Capacity</p>
+                        <p className="font-medium">{region.capacity}%</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Reliability</p>
+                        <p className="font-medium">{region.reliability}%</p>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-muted-foreground">Capacity</span>
-                      <p className="font-medium">{country.capacityUtil}%</p>
-                    </div>
-                    <div>
-                      <span className="text-muted-foreground">Reliability</span>
-                      <p className="font-medium">{country.supplierReliability}%</p>
+
+                    <Progress value={region.capacity} className="h-1.5" />
+
+                    <div className="flex items-center justify-between pt-2 border-t">
+                      <div className="flex items-center gap-1 text-xs">
+                        <TrendingDown className="h-3 w-3 text-green-500" />
+                        <span className="text-green-600">Cost improving</span>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-slate-400" />
                     </div>
                   </div>
-                  
-                  {selectedCountry === country.name && (
-                    <div className="mt-4 pt-4 border-t grid grid-cols-3 gap-4 animate-in fade-in duration-200">
-                      <div className="text-center">
-                        <div className="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full mx-auto mb-1">
-                          <Building className="h-4 w-4 text-blue-600" />
-                        </div>
-                        <p className="text-xs text-muted-foreground">Facilities</p>
-                        <p className="font-semibold">{country.facilities}</p>
-                      </div>
-                      <div className="text-center">
-                        <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full mx-auto mb-1">
-                          <Users className="h-4 w-4 text-green-600" />
-                        </div>
-                        <p className="text-xs text-muted-foreground">Employees</p>
-                        <p className="font-semibold">{country.employees.toLocaleString()}</p>
-                      </div>
-                      <div className="text-center">
-                        <div className="flex items-center justify-center w-8 h-8 bg-amber-100 rounded-full mx-auto mb-1">
-                          <Truck className="h-4 w-4 text-amber-600" />
-                        </div>
-                        <p className="text-xs text-muted-foreground">Volume</p>
-                        <p className="font-semibold">{country.yearlyVolume}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
-        {/* Trend Charts */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Performance Trends
-            </CardTitle>
-            <CardDescription>6-month cost and lead time trends</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div>
-              <h4 className="text-sm font-medium mb-3">Cost per Unit Trend</h4>
-              <ChartContainer config={chartConfig} className="h-40">
-                <LineChart data={currentRegion.trends}>
+          {/* Comparison Chart */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Globe className="h-5 w-5" />
+                Regional Comparison
+              </CardTitle>
+              <CardDescription>Cost per unit and lead time across hubs</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer config={chartConfig} className="h-56">
+                <BarChart data={comparisonData}>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200" />
-                  <XAxis dataKey="month" className="text-xs" />
-                  <YAxis className="text-xs" domain={['auto', 'auto']} />
+                  <XAxis dataKey="name" className="text-xs" />
+                  <YAxis yAxisId="left" className="text-xs" />
+                  <YAxis yAxisId="right" orientation="right" className="text-xs" />
                   <ChartTooltip content={<ChartTooltipContent />} />
-                  <Line 
-                    type="monotone" 
-                    dataKey="cost" 
-                    stroke="#3b82f6" 
-                    strokeWidth={2}
-                    dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
-                  />
-                </LineChart>
-              </ChartContainer>
-            </div>
-
-            <div>
-              <h4 className="text-sm font-medium mb-3">Lead Time Trend</h4>
-              <ChartContainer config={chartConfig} className="h-40">
-                <BarChart data={currentRegion.trends}>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200" />
-                  <XAxis dataKey="month" className="text-xs" />
-                  <YAxis className="text-xs" />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="leadTime" fill="#10b981" radius={[4, 4, 0, 0]} />
+                  <Bar yAxisId="left" dataKey="costPerUnit" fill="#3b82f6" name="Cost/Unit ($)" radius={[4, 4, 0, 0]} />
+                  <Bar yAxisId="right" dataKey="leadTime" fill="#f59e0b" name="Lead Time (days)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ChartContainer>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
 
-      {/* Comparative Analysis */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Globe className="h-5 w-5" />
-            Regional Comparison Matrix
-          </CardTitle>
-          <CardDescription>Cross-regional performance benchmarking</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium">Region</th>
-                  <th className="text-center py-3 px-4 font-medium">Cost/Unit</th>
-                  <th className="text-center py-3 px-4 font-medium">Lead Time</th>
-                  <th className="text-center py-3 px-4 font-medium">Capacity</th>
-                  <th className="text-center py-3 px-4 font-medium">Reliability</th>
-                  <th className="text-center py-3 px-4 font-medium">Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(Object.entries(regionData) as [RegionKey, RegionData][]).map(([key, region]) => {
-                  const score = Math.round((100 - (region.totalCost / 20) / 20 * 100) * 0.3 + 
-                                          (100 - region.avgLeadTime / 35 * 100) * 0.25 + 
-                                          region.capacityUtil * 0.25 + 
-                                          region.supplierReliability * 0.2)
-                  return (
-                    <tr 
-                      key={key} 
-                      className={`border-b hover:bg-slate-50 cursor-pointer transition-colors ${
-                        selectedRegion === key ? "bg-blue-50" : ""
-                      }`}
-                      onClick={() => { setSelectedRegion(key); setSelectedCountry(null); }}
-                    >
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4 text-slate-400" />
-                          <span className="font-medium">{region.name}</span>
-                        </div>
-                      </td>
-                      <td className="text-center py-3 px-4">
-                        <span className="font-mono">${(region.totalCost / 20).toFixed(2)}</span>
-                      </td>
-                      <td className="text-center py-3 px-4">
-                        <span className="font-mono">{region.avgLeadTime} days</span>
-                      </td>
-                      <td className="text-center py-3 px-4">
-                        <div className="flex items-center justify-center gap-2">
-                          <Progress value={region.capacityUtil} className="h-2 w-16" />
-                          <span className="text-xs text-muted-foreground">{region.capacityUtil}%</span>
-                        </div>
-                      </td>
-                      <td className="text-center py-3 px-4">
-                        <Badge 
-                          variant="outline" 
-                          className={
-                            region.supplierReliability >= 95 ? "bg-green-50 text-green-700 border-green-200" :
-                            region.supplierReliability >= 90 ? "bg-blue-50 text-blue-700 border-blue-200" :
-                            "bg-amber-50 text-amber-700 border-amber-200"
-                          }
-                        >
-                          {region.supplierReliability}%
-                        </Badge>
-                      </td>
-                      <td className="text-center py-3 px-4">
-                        <Badge 
-                          className={
-                            score >= 80 ? "bg-green-600 text-white hover:bg-green-700" :
-                            score >= 70 ? "bg-blue-600 text-white hover:bg-blue-700" :
-                            "bg-amber-600 text-white hover:bg-amber-700"
-                          }
-                        >
-                          {score}
-                        </Badge>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+              <div className="grid grid-cols-4 gap-4 mt-6 pt-4 border-t">
+                {comparisonData.map((region) => (
+                  <div key={region.name} className="text-center">
+                    <p className="text-sm font-medium">{region.name}</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      ${region.costPerUnit}/unit | {region.leadTime}d
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Summary Stats */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0">
+              <CardContent className="p-5">
+                <p className="text-sm font-medium text-blue-700">Total Annual Cost</p>
+                <p className="text-2xl font-bold text-blue-900">$847M</p>
+                <p className="text-xs text-blue-600 mt-1">Across all 4 regions</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0">
+              <CardContent className="p-5">
+                <p className="text-sm font-medium text-green-700">Avg Cost/Unit</p>
+                <p className="text-2xl font-bold text-green-900">$15.00</p>
+                <p className="text-xs text-green-600 mt-1">-3.8% vs last year</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0">
+              <CardContent className="p-5">
+                <p className="text-sm font-medium text-amber-700">Avg Lead Time</p>
+                <p className="text-2xl font-bold text-amber-900">16 days</p>
+                <p className="text-xs text-amber-600 mt-1">-2.5 days vs last year</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-gradient-to-br from-indigo-50 to-violet-50 border-0">
+              <CardContent className="p-5">
+                <p className="text-sm font-medium text-indigo-700">Total Facilities</p>
+                <p className="text-2xl font-bold text-indigo-900">65</p>
+                <p className="text-xs text-indigo-600 mt-1">96,900 employees</p>
+              </CardContent>
+            </Card>
           </div>
-        </CardContent>
-      </Card>
+        </>
+      )}
+
+      {/* Selected Region Detail View */}
+      {selectedRegionData && selectedRegion && (
+        <div className="space-y-6 animate-in fade-in duration-300">
+          {/* Region Header */}
+          <Card className="bg-gradient-to-r from-slate-50 to-white">
+            <CardContent className="p-6">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <h2 className="text-2xl font-bold">{selectedRegionData.name}</h2>
+                    <Badge 
+                      variant="outline" 
+                      className={
+                        selectedRegionData.statusColor === "green" ? "bg-green-50 text-green-700 border-green-200" :
+                        selectedRegionData.statusColor === "blue" ? "bg-blue-50 text-blue-700 border-blue-200" :
+                        selectedRegionData.statusColor === "amber" ? "bg-amber-50 text-amber-700 border-amber-200" :
+                        "bg-slate-50 text-slate-700 border-slate-200"
+                      }
+                    >
+                      {selectedRegionData.status}
+                    </Badge>
+                  </div>
+                  <p className="text-muted-foreground">{selectedRegionData.facilities} facilities | {selectedRegionData.employees.toLocaleString()} employees</p>
+                </div>
+                <div className="flex items-center gap-6">
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground">Annual Cost</p>
+                    <p className="text-2xl font-bold">${selectedRegionData.annualCost}M</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground">Cost/Unit</p>
+                    <p className="text-2xl font-bold">${selectedRegionData.costPerUnit}</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground">Lead Time</p>
+                    <p className="text-2xl font-bold">{selectedRegionData.leadTime}d</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* KPIs */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card>
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Capacity Utilization</p>
+                    <p className="text-2xl font-bold">{selectedRegionData.capacity}%</p>
+                    <Progress value={selectedRegionData.capacity} className="h-1.5 mt-2" />
+                  </div>
+                  <Factory className="h-8 w-8 text-blue-500" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Supplier Reliability</p>
+                    <p className="text-2xl font-bold">{selectedRegionData.reliability}%</p>
+                    <Progress value={selectedRegionData.reliability} className="h-1.5 mt-2" />
+                  </div>
+                  <Shield className="h-8 w-8 text-green-500" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Facilities</p>
+                    <p className="text-2xl font-bold">{selectedRegionData.facilities}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Manufacturing sites</p>
+                  </div>
+                  <Factory className="h-8 w-8 text-amber-500" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Workforce</p>
+                    <p className="text-2xl font-bold">{(selectedRegionData.employees / 1000).toFixed(1)}K</p>
+                    <p className="text-xs text-muted-foreground mt-1">Employees</p>
+                  </div>
+                  <Users className="h-8 w-8 text-indigo-500" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Trends & Analysis */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5" />
+                  Performance Trends (vs Last Year)
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {selectedRegionData.trend.map((item, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                    <span className="font-medium">{item.metric}</span>
+                    <div className="flex items-center gap-2">
+                      {item.direction === "down" ? (
+                        <ArrowDownRight className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <ArrowUpRight className="h-4 w-4 text-green-500" />
+                      )}
+                      <span className="font-semibold text-green-600">
+                        {item.change > 0 ? "+" : ""}{item.change}{item.metric.includes("Time") || item.metric.includes("Capacity") ? "" : "%"}
+                        {item.metric.includes("Time") ? " days" : ""}
+                        {item.metric.includes("Capacity") ? "%" : ""}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Truck className="h-5 w-5" />
+                  Key Products
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {selectedRegionData.keyProducts.map((product, index) => (
+                    <Badge key={index} variant="secondary" className="text-sm py-1 px-3">
+                      {product}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Strengths & Challenges */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="border-l-4 border-l-green-500">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-green-700">
+                  <Check className="h-5 w-5" />
+                  Strengths
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  {selectedRegionData.strengths.map((strength, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <Check className="h-4 w-4 text-green-500 mt-0.5" />
+                      <span className="text-sm">{strength}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+
+            <Card className="border-l-4 border-l-amber-500">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-amber-700">
+                  <AlertTriangle className="h-5 w-5" />
+                  Challenges
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  {selectedRegionData.challenges.map((challenge, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <AlertTriangle className="h-4 w-4 text-amber-500 mt-0.5" />
+                      <span className="text-sm">{challenge}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

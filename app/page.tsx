@@ -5,7 +5,7 @@ import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sid
 import { AppSidebar } from "@/components/app-sidebar"
 import { DashboardContent } from "@/components/dashboard-content"
 import { NotificationProvider } from "@/components/notification-provider"
-import { Menu, Home, Globe, Ship, Zap, Calculator, AlertTriangle } from "lucide-react"
+import { Menu, Home, Globe, Ship, Zap, Calculator, AlertTriangle, Shield } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
@@ -17,8 +17,9 @@ function MobileNavigation({ activeModule, setActiveModule }: { activeModule: str
   const modules = [
     { id: "home", title: "Dashboard", icon: Home },
     { id: "regional", title: "Regional", icon: Globe },
-    { id: "supply", title: "Command Center", icon: Ship },
-    { id: "sandbox", title: "Sandbox", icon: Zap },
+    { id: "commodity", title: "Commodity", icon: Shield },
+    { id: "sandbox", title: "Scenarios", icon: Zap },
+    { id: "supply", title: "Supply Chain", icon: Ship },
     { id: "financial", title: "Financial", icon: Calculator },
     { id: "alerts", title: "Alerts", icon: AlertTriangle },
   ]

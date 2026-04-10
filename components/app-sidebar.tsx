@@ -1,6 +1,6 @@
 "use client"
 
-import { Building2, Calculator, Home, Globe, TrendingUp, Bell, Zap, LogOut, Ship, AlertTriangle } from "lucide-react"
+import { Calculator, Home, Globe, TrendingUp, Zap, LogOut, Ship, AlertTriangle, Package, Shield } from "lucide-react"
 
 import {
   Sidebar,
@@ -23,35 +23,42 @@ const modules = [
     id: "home",
     title: "Executive Dashboard",
     icon: Home,
-    description: "KPIs & Real-time Monitoring",
+    description: "KPIs & Regional Overview",
     badge: "Live",
   },
   {
     id: "regional",
     title: "Regional Performance",
     icon: Globe,
-    description: "Hub Analytics & Drill-down",
+    description: "4 Hub Comparison",
+    badge: null,
+  },
+  {
+    id: "commodity",
+    title: "Commodity & Hedging",
+    icon: Shield,
+    description: "Material Costs & Risk",
+    badge: null,
+  },
+  {
+    id: "sandbox",
+    title: "Scenario Planning",
+    icon: Zap,
+    description: "Price & Demand Modeling",
     badge: null,
   },
   {
     id: "supply",
-    title: "Command Center",
+    title: "Supply Chain Ops",
     icon: Ship,
-    description: "Operations & Routes",
+    description: "Routes & Suppliers",
     badge: "4",
   },
   {
-    id: "sandbox",
-    title: "Scenario Sandbox",
-    icon: Zap,
-    description: "Stress Testing & Simulation",
-    badge: null,
-  },
-  {
     id: "financial",
-    title: "Financial Engine",
+    title: "Financial Impact",
     icon: Calculator,
-    description: "EBITDA & NPV Modeling",
+    description: "EBITDA & NPV",
     badge: null,
   },
   {

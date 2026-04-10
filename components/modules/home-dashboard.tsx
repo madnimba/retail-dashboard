@@ -1,147 +1,147 @@
 "use client"
 
-import { AlertTriangle, Bell, TrendingUp, TrendingDown, Activity, BarChart3, Zap, Shield, Target, DollarSign, Users, Package, Globe, Clock, Settings, Download, ChevronDown, AlertCircle, MapPin, Ship, Factory } from "lucide-react"
+import { AlertTriangle, Bell, TrendingUp, TrendingDown, Activity, BarChart3, Zap, Shield, DollarSign, Globe, Clock, ChevronRight, MapPin, Ship, Factory, Package, ArrowUpRight, ArrowDownRight } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useNotifications } from "@/components/notification-provider"
 import { useState, useEffect } from "react"
-import { ReportGeneratorModal } from "@/components/modals/report-generator-modal"
-import { InventorySimulationModal } from "@/components/modals/inventory-simulation-modal"
-import { FxHedgingModal } from "@/components/modals/fx-hedging-modal"
-import { ForecastGeneratorModal } from "@/components/modals/forecast-generator-modal"
-import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"
-import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts"
 
 export function HomeDashboard() {
   const { notifications, unreadCount } = useNotifications()
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null)
   const [currentTime, setCurrentTime] = useState(new Date())
   
-  // Real-time clock for live feel
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
     return () => clearInterval(timer)
   }, [])
 
-  const recentAlerts = notifications.filter((n) => !n.read).slice(0, 3)
+  // Key Financial Metrics
+  const metrics = {
+    totalSupplyChainCost: 847,
+    targetCost: 800,
+    ytdSavings: 42,
+    commodityExposure: 542,
+    hedgedPercent: 48,
+    regionalizationProgress: 42,
+  }
 
-  const [showReportModal, setShowReportModal] = useState(false)
-  const [showInventoryModal, setShowInventoryModal] = useState(false)
-  const [showFxModal, setShowFxModal] = useState(false)
-  const [showForecastModal, setShowForecastModal] = useState(false)
-
-  // Supply Chain Metrics
-  const supplyChainCost = { current: 847, target: 800, unit: "M" }
-  const costVariance = ((supplyChainCost.current - supplyChainCost.target) / supplyChainCost.target * 100).toFixed(1)
-
-  // Monthly Supply Chain Performance
-  const monthlyPerformance = [
-    { month: "Jan", cost: 72.1, disruptions: 3, leadTime: 28, savings: 2.1 },
-    { month: "Feb", cost: 70.8, disruptions: 2, leadTime: 26, savings: 2.4 },
-    { month: "Mar", cost: 71.5, disruptions: 4, leadTime: 29, savings: 2.2 },
-    { month: "Apr", cost: 69.2, disruptions: 1, leadTime: 24, savings: 2.8 },
-    { month: "May", cost: 68.4, disruptions: 2, leadTime: 23, savings: 3.1 },
-    { month: "Jun", cost: 70.1, disruptions: 5, leadTime: 31, savings: 2.5 },
-    { month: "Jul", cost: 69.8, disruptions: 3, leadTime: 27, savings: 2.9 },
-    { month: "Aug", cost: 68.9, disruptions: 2, leadTime: 25, savings: 3.2 },
+  // Regional Hub Status - The 4 key regions
+  const regionalHubs = [
+    { 
+      name: "Southeast Asia", 
+      status: "Operational",
+      statusColor: "green",
+      cost: "$312M", 
+      capacity: 82,
+      activeAlerts: 2,
+      leadTime: 28,
+      trend: "stable"
+    },
+    { 
+      name: "Turkey", 
+      status: "Expanding",
+      statusColor: "blue",
+      cost: "$245M", 
+      capacity: 91,
+      activeAlerts: 0,
+      leadTime: 16,
+      trend: "improving"
+    },
+    { 
+      name: "Morocco", 
+      status: "Developing",
+      statusColor: "amber",
+      cost: "$178M", 
+      capacity: 68,
+      activeAlerts: 1,
+      leadTime: 12,
+      trend: "improving"
+    },
+    { 
+      name: "Brazil", 
+      status: "Pilot",
+      statusColor: "slate",
+      cost: "$112M", 
+      capacity: 45,
+      activeAlerts: 1,
+      leadTime: 8,
+      trend: "stable"
+    },
   ]
 
-  // Regional breakdown
-  const regionalPerformance = [
-    { region: "Southeast Asia", cost: 312, progress: 42, status: "On Track" },
-    { region: "Turkey", cost: 245, progress: 68, status: "Ahead" },
-    { region: "Morocco", cost: 178, progress: 35, status: "At Risk" },
-    { region: "Brazil", cost: 112, progress: 22, status: "Planning" },
-  ]
-
-  // Risk distribution
-  const riskDistribution = [
-    { name: "Geopolitical", value: 35, color: "#ef4444" },
-    { name: "Logistics", value: 28, color: "#f97316" },
-    { name: "Supplier", value: 22, color: "#eab308" },
-    { name: "Currency", value: 15, color: "#22c55e" },
-  ]
-
-  // Real-time alerts data
-  const liveAlerts = [
+  // Critical Alerts requiring attention
+  const criticalAlerts = [
     { 
       id: 1, 
       severity: "critical", 
-      title: "Port Congestion - Shanghai", 
-      description: "Estimated +7 days delay on Asia-Europe routes",
-      time: "12 min ago",
-      impact: "$2.4M"
+      region: "Southeast Asia",
+      title: "Port Congestion - Shanghai Route", 
+      impact: "$2.4M at risk",
+      action: "Reroute to Turkey Hub"
     },
     { 
       id: 2, 
       severity: "warning", 
-      title: "Supplier Capacity Alert", 
-      description: "Turkish Textile Co. at 94% capacity utilization",
-      time: "45 min ago",
-      impact: "$890K"
+      region: "Southeast Asia",
+      title: "Aluminum Price Spike +8%", 
+      impact: "$11.4M exposure",
+      action: "Review hedge position"
     },
     { 
       id: 3, 
-      severity: "info", 
-      title: "Route Optimization Available", 
-      description: "Morocco hub can reduce lead time by 3 days",
-      time: "2 hrs ago",
-      impact: "+$340K savings"
+      severity: "warning", 
+      region: "Morocco",
+      title: "Supplier Capacity at 94%", 
+      impact: "Fulfillment risk",
+      action: "Activate backup"
     },
     { 
       id: 4, 
-      severity: "warning", 
-      title: "FX Exposure Spike", 
-      description: "USD/EUR volatility affecting Brazil operations",
-      time: "3 hrs ago",
-      impact: "$560K"
+      severity: "info", 
+      region: "Brazil",
+      title: "New Supplier Qualified", 
+      impact: "Cost reduction opportunity",
+      action: "Onboard supplier"
     },
   ]
 
+  // Commodity Price Trends (simplified)
+  const commodityStatus = [
+    { name: "Aluminum", price: "$2,340", change: +1.2, trend: "up", exposure: "$142M", hedged: 45 },
+    { name: "Steel", price: "$780", change: -0.5, trend: "down", exposure: "$186M", hedged: 60 },
+    { name: "Plastic", price: "$1,420", change: +2.8, trend: "up", exposure: "$98M", hedged: 30 },
+    { name: "Copper", price: "$8,920", change: +0.8, trend: "up", exposure: "$64M", hedged: 55 },
+  ]
+
+  // Monthly cost trend
+  const costTrend = [
+    { month: "Oct", cost: 72.1, target: 70 },
+    { month: "Nov", cost: 70.8, target: 70 },
+    { month: "Dec", cost: 71.5, target: 69 },
+    { month: "Jan", cost: 69.2, target: 68 },
+    { month: "Feb", cost: 68.4, target: 67 },
+    { month: "Mar", cost: 70.1, target: 66 },
+  ]
+
   const chartConfig = {
-    cost: {
-      label: "Cost ($M)",
-      color: "#3b82f6",
-    },
-    savings: {
-      label: "Savings ($M)",
-      color: "#10b981",
-    },
-    leadTime: {
-      label: "Lead Time",
-      color: "#f59e0b",
-    },
+    cost: { label: "Actual ($M)", color: "#3b82f6" },
+    target: { label: "Target ($M)", color: "#22c55e" },
   }
-
-  // Calculate overall risk score
-  const calculateRiskScore = () => {
-    const criticalAlerts = liveAlerts.filter(a => a.severity === "critical").length
-    const warningAlerts = liveAlerts.filter(a => a.severity === "warning").length
-    if (criticalAlerts >= 2) return { level: "High", color: "text-red-600", bg: "bg-red-50", border: "border-red-200" }
-    if (criticalAlerts >= 1 || warningAlerts >= 2) return { level: "Medium", color: "text-amber-600", bg: "bg-amber-50", border: "border-amber-200" }
-    return { level: "Low", color: "text-green-600", bg: "bg-green-50", border: "border-green-200" }
-  }
-
-  const riskScore = calculateRiskScore()
 
   return (
-    <div className="p-4 sm:p-8 space-y-8 bg-gradient-to-br from-slate-50 to-white min-h-screen">
+    <div className="p-4 sm:p-6 space-y-6 bg-gradient-to-br from-slate-50 to-white min-h-screen">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">
-            <div className="bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
-              Yamaha Global Supply Chain
-            </div>
-            <div className="text-lg sm:text-xl font-medium text-slate-600 mt-1">
-              Operating System
-            </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
+            Yamaha Global Supply Chain OS
           </h1>
-          <div className="flex items-center gap-3 mt-2">
-            <p className="text-slate-600">Real-time operations monitoring</p>
+          <div className="flex items-center gap-3 mt-1">
+            <p className="text-slate-600">Executive Dashboard</p>
             <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
               <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
               Live
@@ -151,361 +151,290 @@ export function HomeDashboard() {
             </span>
           </div>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Button
-            variant="outline"
-            className="shadow-sm hover:shadow-md transition-all duration-200 bg-transparent w-full sm:w-auto"
-            onClick={() => setShowReportModal(true)}
-          >
-            <BarChart3 className="h-4 w-4 mr-2" />
-            Generate Report
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button className="shadow-sm hover:shadow-md transition-all duration-200 bg-gradient-to-r from-blue-600 to-blue-700 w-full sm:w-auto">
-                <Zap className="h-4 w-4 mr-2" />
-                Quick Actions
-                <ChevronDown className="h-4 w-4 ml-2" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuItem onClick={() => setShowInventoryModal(true)}>
-                <Activity className="h-4 w-4 mr-2" />
-                Run Inventory Simulation
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setShowFxModal(true)}>
-                <TrendingDown className="h-4 w-4 mr-2" />
-                Hedge FX Exposure
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setShowForecastModal(true)}>
-                <BarChart3 className="h-4 w-4 mr-2" />
-                Generate Forecast
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="flex gap-2">
+          <Badge variant="destructive" className="py-1 px-3">
+            {criticalAlerts.filter(a => a.severity === "critical").length} Critical
+          </Badge>
+          <Badge variant="secondary" className="py-1 px-3 bg-amber-100 text-amber-700">
+            {criticalAlerts.filter(a => a.severity === "warning").length} Warnings
+          </Badge>
         </div>
       </div>
 
-      {/* KPI Cards Row */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-gradient-to-br from-blue-50 to-cyan-50">
-          <CardContent className="p-6">
+      {/* Top KPIs */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 shadow-sm">
+          <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-blue-700">Global Supply Chain Cost</p>
-                <p className="text-3xl font-bold text-blue-900">${supplyChainCost.current}M</p>
+                <p className="text-sm font-medium text-blue-700">Total Supply Chain Cost</p>
+                <p className="text-2xl font-bold text-blue-900">${metrics.totalSupplyChainCost}M</p>
                 <p className="text-xs text-blue-600 mt-1">
-                  {Number(costVariance) > 0 ? "+" : ""}{costVariance}% vs ${supplyChainCost.target}M target
+                  +{((metrics.totalSupplyChainCost - metrics.targetCost) / metrics.targetCost * 100).toFixed(1)}% vs ${metrics.targetCost}M target
                 </p>
               </div>
-              <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
-                <DollarSign className="h-6 w-6 text-blue-600" />
+              <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                <DollarSign className="h-5 w-5 text-blue-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-gradient-to-br from-red-50 to-orange-50">
-          <CardContent className="p-6">
+        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 shadow-sm">
+          <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-red-700">Disruption Risk Exposure</p>
-                <p className="text-3xl font-bold text-red-900">$12.4M</p>
-                <p className="text-xs text-red-600 mt-1">4 active risk events</p>
+                <p className="text-sm font-medium text-green-700">YTD Cost Savings</p>
+                <p className="text-2xl font-bold text-green-900">${metrics.ytdSavings}M</p>
+                <p className="text-xs text-green-600 mt-1">From regionalization</p>
               </div>
-              <div className="h-12 w-12 bg-red-100 rounded-full flex items-center justify-center">
-                <AlertTriangle className="h-6 w-6 text-red-600" />
+              <div className="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
+                <TrendingDown className="h-5 w-5 text-green-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-gradient-to-br from-green-50 to-emerald-50">
-          <CardContent className="p-6">
+        <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0 shadow-sm">
+          <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-green-700">Regionalization Progress</p>
-                <p className="text-3xl font-bold text-green-900">42%</p>
-                <p className="text-xs text-green-600 mt-1">On track for 2026 target</p>
+                <p className="text-sm font-medium text-amber-700">Commodity Exposure</p>
+                <p className="text-2xl font-bold text-amber-900">${metrics.commodityExposure}M</p>
+                <p className="text-xs text-amber-600 mt-1">{metrics.hedgedPercent}% hedged</p>
               </div>
-              <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
-                <Globe className="h-6 w-6 text-green-600" />
+              <div className="h-10 w-10 bg-amber-100 rounded-full flex items-center justify-center">
+                <Package className="h-5 w-5 text-amber-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className={`hover:shadow-lg transition-all duration-300 border-0 shadow-sm ${riskScore.bg}`}>
-          <CardContent className="p-6">
+        <Card className="bg-gradient-to-br from-indigo-50 to-violet-50 border-0 shadow-sm">
+          <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className={`text-sm font-medium ${riskScore.color}`}>Risk Score</p>
-                <p className={`text-3xl font-bold ${riskScore.color}`}>{riskScore.level}</p>
-                <p className={`text-xs ${riskScore.color} mt-1`}>{unreadCount + liveAlerts.length} active alerts</p>
+                <p className="text-sm font-medium text-indigo-700">Regionalization</p>
+                <p className="text-2xl font-bold text-indigo-900">{metrics.regionalizationProgress}%</p>
+                <p className="text-xs text-indigo-600 mt-1">Target: 70% by 2027</p>
               </div>
-              <div className={`h-12 w-12 ${riskScore.bg} ${riskScore.border} border rounded-full flex items-center justify-center`}>
-                <Shield className={`h-6 w-6 ${riskScore.color}`} />
+              <div className="h-10 w-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                <Globe className="h-5 w-5 text-indigo-600" />
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Regional Progress Overview */}
-      <Card
-        className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-white/80 backdrop-blur-sm"
-        onMouseEnter={() => setHoveredCard("regional")}
-        onMouseLeave={() => setHoveredCard(null)}
-      >
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center gap-3 text-xl">
-            <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-              <Globe className="h-5 w-5 text-white" />
-            </div>
-            Regionalization Progress by Hub
+      {/* Regional Hub Status - Central Control View */}
+      <Card className="shadow-sm">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Globe className="h-5 w-5" />
+            Regional Hub Status
           </CardTitle>
-          <CardDescription className="text-base">Track progress across global manufacturing hubs</CardDescription>
+          <CardDescription>Real-time status of 4 manufacturing hubs</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {regionalPerformance.map((region, index) => (
-              <div key={region.region} className="p-4 border rounded-lg hover:shadow-md transition-shadow">
+            {regionalHubs.map((hub) => (
+              <div 
+                key={hub.name} 
+                className={`p-4 border rounded-lg hover:shadow-md transition-all cursor-pointer ${
+                  hub.activeAlerts > 0 ? "border-amber-200" : "border-slate-200"
+                }`}
+              >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-slate-500" />
-                    <span className="font-medium text-sm">{region.region}</span>
+                    <span className="font-medium">{hub.name}</span>
                   </div>
                   <Badge 
                     variant="outline" 
                     className={
-                      region.status === "Ahead" ? "bg-green-50 text-green-700 border-green-200" :
-                      region.status === "On Track" ? "bg-blue-50 text-blue-700 border-blue-200" :
-                      region.status === "At Risk" ? "bg-amber-50 text-amber-700 border-amber-200" :
+                      hub.statusColor === "green" ? "bg-green-50 text-green-700 border-green-200" :
+                      hub.statusColor === "blue" ? "bg-blue-50 text-blue-700 border-blue-200" :
+                      hub.statusColor === "amber" ? "bg-amber-50 text-amber-700 border-amber-200" :
                       "bg-slate-50 text-slate-700 border-slate-200"
                     }
                   >
-                    {region.status}
+                    {hub.status}
                   </Badge>
                 </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-600">Progress</span>
-                    <span className="font-semibold">{region.progress}%</span>
+                
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Annual Cost</span>
+                    <span className="font-medium">{hub.cost}</span>
                   </div>
-                  <Progress value={region.progress} className="h-2" />
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-600">Annual Cost</span>
-                    <span className="font-semibold">${region.cost}M</span>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Capacity</span>
+                    <span className="font-medium">{hub.capacity}%</span>
+                  </div>
+                  <Progress value={hub.capacity} className="h-1.5" />
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Lead Time</span>
+                    <span className="font-medium">{hub.leadTime} days</span>
                   </div>
                 </div>
+
+                {hub.activeAlerts > 0 && (
+                  <div className="mt-3 pt-3 border-t flex items-center justify-between">
+                    <div className="flex items-center gap-1 text-amber-600">
+                      <AlertTriangle className="h-3.5 w-3.5" />
+                      <span className="text-xs font-medium">{hub.activeAlerts} alert{hub.activeAlerts > 1 ? "s" : ""}</span>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-slate-400" />
+                  </div>
+                )}
               </div>
             ))}
           </div>
-          {hoveredCard === "regional" && (
-            <div className="grid grid-cols-3 gap-4 pt-4 border-t animate-in fade-in duration-200">
-              <div className="text-center">
-                <p className="text-sm text-slate-600">Total Investment</p>
-                <p className="text-lg font-semibold">$1.2B</p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm text-slate-600">Expected Savings</p>
-                <p className="text-lg font-semibold text-green-600">$340M/yr</p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm text-slate-600">Completion Target</p>
-                <p className="text-lg font-semibold">Q4 2028</p>
-              </div>
-            </div>
-          )}
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Supply Chain Performance Chart */}
-        <Card className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3">
-              <div className="h-10 w-10 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                <BarChart3 className="h-5 w-5 text-white" />
-              </div>
-              Supply Chain Performance
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Critical Alerts */}
+        <Card className="shadow-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Bell className="h-5 w-5" />
+              Action Required
+              <Badge variant="destructive" className="ml-2">{criticalAlerts.length}</Badge>
             </CardTitle>
-            <CardDescription>Monthly cost and savings trends</CardDescription>
+            <CardDescription>Alerts requiring immediate attention</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div>
-              <h4 className="text-sm font-medium text-slate-700 mb-3">Cost vs Savings Trends</h4>
-              <ChartContainer config={chartConfig} className="h-48 sm:h-64">
-                <AreaChart data={monthlyPerformance}>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200" />
-                  <XAxis dataKey="month" className="text-xs" />
-                  <YAxis className="text-xs" />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Area 
-                    type="monotone" 
-                    dataKey="cost" 
-                    stroke="#3b82f6" 
-                    fill="#3b82f6"
-                    fillOpacity={0.2}
-                    strokeWidth={2}
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="savings" 
-                    stroke="#10b981" 
-                    fill="#10b981"
-                    fillOpacity={0.3}
-                    strokeWidth={2}
-                  />
-                </AreaChart>
-              </ChartContainer>
-            </div>
-
-            {/* Risk Distribution */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-3">
-                <h4 className="text-sm font-medium text-slate-700">Risk Distribution</h4>
-                {riskDistribution.map((risk, index) => (
-                  <div key={risk.name} className="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: risk.color }}></div>
-                      <span className="text-sm">{risk.name}</span>
-                    </div>
-                    <span className="text-sm font-medium">{risk.value}%</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="space-y-3">
-                <h4 className="text-sm font-medium text-slate-700">Key Metrics</h4>
-                <div className="grid grid-cols-1 gap-2">
-                  <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-blue-500" />
-                      <span className="text-sm">Avg Lead Time</span>
-                    </div>
-                    <span className="text-sm font-medium">26 days</span>
-                  </div>
-                  <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <Factory className="h-4 w-4 text-green-500" />
-                      <span className="text-sm">Capacity Util.</span>
-                    </div>
-                    <span className="text-sm font-medium">78%</span>
-                  </div>
-                  <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <Ship className="h-4 w-4 text-amber-500" />
-                      <span className="text-sm">On-Time Delivery</span>
-                    </div>
-                    <span className="text-sm font-medium">94.2%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Real-time Alerts Panel */}
-        <Card className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3">
-              <div className="h-10 w-10 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center">
-                <Bell className="h-5 w-5 text-white" />
-              </div>
-              Real-time Alerts
-              <Badge variant="destructive" className="ml-2">{liveAlerts.length} Active</Badge>
-            </CardTitle>
-            <CardDescription>Critical supply chain events requiring attention</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {liveAlerts.map((alert) => (
+          <CardContent className="space-y-3">
+            {criticalAlerts.map((alert) => (
               <div 
-                key={alert.id} 
-                className={`p-4 rounded-lg border transition-all hover:shadow-md ${
+                key={alert.id}
+                className={`p-3 rounded-lg border flex items-start justify-between gap-3 ${
                   alert.severity === "critical" ? "bg-red-50 border-red-200" :
                   alert.severity === "warning" ? "bg-amber-50 border-amber-200" :
                   "bg-blue-50 border-blue-200"
                 }`}
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start gap-3">
-                    <div className={`mt-0.5 ${
-                      alert.severity === "critical" ? "text-red-600" :
-                      alert.severity === "warning" ? "text-amber-600" :
-                      "text-blue-600"
-                    }`}>
-                      {alert.severity === "critical" ? <AlertTriangle className="h-5 w-5" /> :
-                       alert.severity === "warning" ? <AlertCircle className="h-5 w-5" /> :
-                       <Activity className="h-5 w-5" />}
-                    </div>
-                    <div>
-                      <h4 className={`font-medium ${
-                        alert.severity === "critical" ? "text-red-900" :
-                        alert.severity === "warning" ? "text-amber-900" :
-                        "text-blue-900"
-                      }`}>{alert.title}</h4>
-                      <p className="text-sm text-slate-600 mt-1">{alert.description}</p>
-                      <p className="text-xs text-slate-500 mt-2">{alert.time}</p>
-                    </div>
+                <div className="flex items-start gap-2">
+                  <div className={`mt-0.5 ${
+                    alert.severity === "critical" ? "text-red-600" :
+                    alert.severity === "warning" ? "text-amber-600" :
+                    "text-blue-600"
+                  }`}>
+                    {alert.severity === "critical" ? <AlertTriangle className="h-4 w-4" /> :
+                     <Bell className="h-4 w-4" />}
                   </div>
+                  <div>
+                    <p className="font-medium text-sm">{alert.title}</p>
+                    <p className="text-xs text-muted-foreground">{alert.region} - {alert.impact}</p>
+                  </div>
+                </div>
+                <Button size="sm" variant="outline" className="text-xs h-7 bg-white">
+                  {alert.action}
+                </Button>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Commodity Watch */}
+        <Card className="shadow-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Package className="h-5 w-5" />
+              Commodity Watch
+            </CardTitle>
+            <CardDescription>Key material prices and hedge status</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {commodityStatus.map((commodity) => (
+              <div key={commodity.name} className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div>
+                    <p className="font-medium text-sm">{commodity.name}</p>
+                    <p className="text-xs text-muted-foreground">Exposure: {commodity.exposure}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
                   <div className="text-right">
-                    <Badge 
-                      variant="outline" 
-                      className={
-                        alert.severity === "critical" ? "bg-red-100 text-red-700 border-red-300" :
-                        alert.severity === "warning" ? "bg-amber-100 text-amber-700 border-amber-300" :
-                        "bg-green-100 text-green-700 border-green-300"
-                      }
-                    >
-                      {alert.impact}
-                    </Badge>
+                    <p className="font-medium text-sm">{commodity.price}</p>
+                    <div className="flex items-center gap-1">
+                      {commodity.change >= 0 ? (
+                        <ArrowUpRight className="h-3 w-3 text-red-500" />
+                      ) : (
+                        <ArrowDownRight className="h-3 w-3 text-green-500" />
+                      )}
+                      <span className={`text-xs ${commodity.change >= 0 ? "text-red-600" : "text-green-600"}`}>
+                        {commodity.change >= 0 ? "+" : ""}{commodity.change}%
+                      </span>
+                    </div>
                   </div>
+                  <Badge 
+                    variant="outline" 
+                    className={commodity.hedged >= 50 ? "bg-green-50 text-green-700 border-green-200" : "bg-amber-50 text-amber-700 border-amber-200"}
+                  >
+                    {commodity.hedged}% hedged
+                  </Badge>
                 </div>
               </div>
             ))}
-            
-            <Button variant="outline" className="w-full mt-4 bg-transparent">
-              View All Alerts
-            </Button>
           </CardContent>
         </Card>
       </div>
 
-      {/* System Status */}
-      <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-        <CardContent className="p-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-slate-600">ERP Connected</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-slate-600">TMS Online</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-slate-600">Supplier Portal Active</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-slate-600">Risk Engine Processing</span>
-              </div>
+      {/* Cost Trend Chart */}
+      <Card className="shadow-sm">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <BarChart3 className="h-5 w-5" />
+            Monthly Cost vs Target
+          </CardTitle>
+          <CardDescription>Supply chain cost performance (6-month trend)</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer config={chartConfig} className="h-48">
+            <AreaChart data={costTrend}>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200" />
+              <XAxis dataKey="month" className="text-xs" />
+              <YAxis className="text-xs" domain={[60, 75]} />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <Area 
+                type="monotone" 
+                dataKey="cost" 
+                stroke="#3b82f6" 
+                fill="#3b82f6"
+                fillOpacity={0.2}
+                strokeWidth={2}
+                name="Actual ($M)"
+              />
+              <Area 
+                type="monotone" 
+                dataKey="target" 
+                stroke="#22c55e" 
+                fill="#22c55e"
+                fillOpacity={0.1}
+                strokeWidth={2}
+                strokeDasharray="5 5"
+                name="Target ($M)"
+              />
+            </AreaChart>
+          </ChartContainer>
+          
+          <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t">
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">Avg Monthly Cost</p>
+              <p className="text-lg font-semibold">$70.4M</p>
             </div>
-            <div className="text-sm text-slate-500">
-              Last sync: {new Date().toLocaleString()}
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">vs Target</p>
+              <p className="text-lg font-semibold text-amber-600">+$2.1M</p>
+            </div>
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">Trend</p>
+              <p className="text-lg font-semibold text-green-600">Improving</p>
             </div>
           </div>
         </CardContent>
       </Card>
-
-      {/* Modals */}
-      <ReportGeneratorModal open={showReportModal} onOpenChange={setShowReportModal} />
-      <InventorySimulationModal open={showInventoryModal} onOpenChange={setShowInventoryModal} />
-      <FxHedgingModal open={showFxModal} onOpenChange={setShowFxModal} />
-      <ForecastGeneratorModal open={showForecastModal} onOpenChange={setShowForecastModal} />
     </div>
   )
 }
