@@ -2,6 +2,10 @@
   "name": "my-v0-project",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.12.1",
+  "pnpm": {
+    "onlyBuiltDependencies": ["@tailwindcss/oxide", "sharp"]
+  },
   "scripts": {
     "build": "next build",
     "dev": "next dev",
@@ -53,7 +57,7 @@
     "react-dom": "^19",
     "react-hook-form": "^7.60.0",
     "react-resizable-panels": "^2.1.7",
-    "recharts": "latest",
+    "recharts": "^3.1.0",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
