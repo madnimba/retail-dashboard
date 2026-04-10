@@ -103,7 +103,7 @@ export function ReportGeneratorModal({ open, onOpenChange }: ReportGeneratorModa
           </Card>
 
           {/* Configuration */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Time Range</Label>
               <Select value={timeRange} onValueChange={setTimeRange}>
@@ -155,14 +155,14 @@ export function ReportGeneratorModal({ open, onOpenChange }: ReportGeneratorModa
           )}
 
           {/* Actions */}
-          <div className="flex justify-end gap-3">
-            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isGenerating}>
+          <div className="flex flex-col sm:flex-row justify-end gap-3">
+            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isGenerating} className="w-full sm:w-auto">
               Cancel
             </Button>
             <Button
               onClick={generateReport}
               disabled={selectedReports.length === 0 || isGenerating}
-              className="bg-gradient-to-r from-blue-600 to-blue-700"
+              className="bg-gradient-to-r from-blue-600 to-blue-700 w-full sm:w-auto"
             >
               <Download className="h-4 w-4 mr-2" />
               {isGenerating ? "Generating..." : "Generate Report"}

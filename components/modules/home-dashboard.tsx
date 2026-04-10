@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useNotifications } from "@/components/notification-provider"
 import { useState } from "react"
 import { ReportGeneratorModal } from "@/components/modals/report-generator-modal"
@@ -17,15 +16,125 @@ import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, Cartesia
 
 export function HomeDashboard() {
   const { notifications, unreadCount } = useNotifications()
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null)
-  const ebitdaProgress = (8 / 14) * 100
+  const [currentTime, setCurrentTime] = useState(new Date())
+  
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000)
+    return () => clearInterval(timer)
+  }, [])
 
-  const recentAlerts = notifications.filter((n) => !n.read).slice(0, 3)
+  // Key Financial Metrics
+  const metrics = {
+    totalSupplyChainCost: 847,
+    targetCost: 800,
+    ytdSavings: 42,
+    commodityExposure: 542,
+    hedgedPercent: 48,
+    regionalizationProgress: 42,
+  }
 
-  const [showReportModal, setShowReportModal] = useState(false)
-  const [showInventoryModal, setShowInventoryModal] = useState(false)
-  const [showFxModal, setShowFxModal] = useState(false)
-  const [showForecastModal, setShowForecastModal] = useState(false)
+  // Regional Hub Status - The 4 key regions
+  const regionalHubs = [
+    { 
+      name: "Southeast Asia", 
+      status: "Operational",
+      statusColor: "green",
+      cost: "$312M", 
+      capacity: 82,
+      activeAlerts: 2,
+      leadTime: 28,
+      trend: "stable"
+    },
+    { 
+      name: "Turkey", 
+      status: "Expanding",
+      statusColor: "blue",
+      cost: "$245M", 
+      capacity: 91,
+      activeAlerts: 0,
+      leadTime: 16,
+      trend: "improving"
+    },
+    { 
+      name: "Morocco", 
+      status: "Developing",
+      statusColor: "amber",
+      cost: "$178M", 
+      capacity: 68,
+      activeAlerts: 1,
+      leadTime: 12,
+      trend: "improving"
+    },
+    { 
+      name: "Brazil", 
+      status: "Pilot",
+      statusColor: "slate",
+      cost: "$112M", 
+      capacity: 45,
+      activeAlerts: 1,
+      leadTime: 8,
+      trend: "stable"
+    },
+  ]
+
+  // Critical Alerts requiring attention
+  const criticalAlerts = [
+    { 
+      id: 1, 
+      severity: "critical", 
+      region: "Southeast Asia",
+      title: "Port Congestion - Shanghai Route", 
+      impact: "$2.4M at risk",
+      action: "Reroute to Turkey Hub"
+    },
+    { 
+      id: 2, 
+      severity: "warning", 
+      region: "Southeast Asia",
+      title: "Aluminum Price Spike +8%", 
+      impact: "$11.4M exposure",
+      action: "Review hedge position"
+    },
+    { 
+      id: 3, 
+      severity: "warning", 
+      region: "Morocco",
+      title: "Supplier Capacity at 94%", 
+      impact: "Fulfillment risk",
+      action: "Activate backup"
+    },
+    { 
+      id: 4, 
+      severity: "info", 
+      region: "Brazil",
+      title: "New Supplier Qualified", 
+      impact: "Cost reduction opportunity",
+      action: "Onboard supplier"
+    },
+  ]
+
+  // Commodity Price Trends (simplified)
+  const commodityStatus = [
+    { name: "Aluminum", price: "$2,340", change: +1.2, trend: "up", exposure: "$142M", hedged: 45 },
+    { name: "Steel", price: "$780", change: -0.5, trend: "down", exposure: "$186M", hedged: 60 },
+    { name: "Plastic", price: "$1,420", change: +2.8, trend: "up", exposure: "$98M", hedged: 30 },
+    { name: "Copper", price: "$8,920", change: +0.8, trend: "up", exposure: "$64M", hedged: 55 },
+  ]
+
+  // Monthly cost trend
+  const costTrend = [
+    { month: "Oct", cost: 72.1, target: 70 },
+    { month: "Nov", cost: 70.8, target: 70 },
+    { month: "Dec", cost: 71.5, target: 69 },
+    { month: "Jan", cost: 69.2, target: 68 },
+    { month: "Feb", cost: 68.4, target: 67 },
+    { month: "Mar", cost: 70.1, target: 66 },
+  ]
+
+  const chartConfig = {
+    cost: { label: "Actual ($M)", color: "#3b82f6" },
+    target: { label: "Target ($M)", color: "#22c55e" },
+  }
 
   // Performance data for charts
   const monthlyPerformance = [
@@ -77,107 +186,107 @@ export function HomeDashboard() {
   }
 
   return (
-    <div className="p-8 space-y-8 bg-gradient-to-br from-slate-50 to-white min-h-screen">
-      <div className="flex items-center justify-between">
+    <div className="p-4 sm:p-6 space-y-6 bg-gradient-to-br from-slate-50 to-white min-h-screen">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
-            Executive Dashboard
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
+            Yamaha Global Supply Chain OS
           </h1>
-          <p className="text-slate-600 mt-2">Real-time business intelligence and KPI monitoring</p>
+          <div className="flex items-center gap-3 mt-1">
+            <p className="text-slate-600">Executive Dashboard</p>
+            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+              <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+              Live
+            </Badge>
+            <span className="text-sm text-slate-500 font-mono">
+              {currentTime.toLocaleTimeString()}
+            </span>
+          </div>
         </div>
-        <div className="flex gap-3">
-          <Button
-            variant="outline"
-            className="shadow-sm hover:shadow-md transition-all duration-200 bg-transparent"
-            onClick={() => setShowReportModal(true)}
-          >
-            <BarChart3 className="h-4 w-4 mr-2" />
-            Generate Report
-          </Button>
-          <Button className="shadow-sm hover:shadow-md transition-all duration-200 bg-gradient-to-r from-blue-600 to-blue-700">
-            <Zap className="h-4 w-4 mr-2" />
-            Quick Actions
-          </Button>
+        <div className="flex gap-2">
+          <Badge variant="destructive" className="py-1 px-3">
+            {criticalAlerts.filter(a => a.severity === "critical").length} Critical
+          </Badge>
+          <Badge variant="secondary" className="py-1 px-3 bg-amber-100 text-amber-700">
+            {criticalAlerts.filter(a => a.severity === "warning").length} Warnings
+          </Badge>
         </div>
       </div>
 
-      {/* KPI Cards Row */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-gradient-to-br from-green-50 to-emerald-50">
-          <CardContent className="p-6">
+      {/* Top KPIs */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 shadow-sm">
+          <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-green-700">Current EBITDA</p>
-                <p className="text-3xl font-bold text-green-900">€8.0M</p>
-                <p className="text-xs text-green-600 mt-1">+12% vs last month</p>
+                <p className="text-sm font-medium text-blue-700">Total Supply Chain Cost</p>
+                <p className="text-2xl font-bold text-blue-900">${metrics.totalSupplyChainCost}M</p>
+                <p className="text-xs text-blue-600 mt-1">
+                  +{((metrics.totalSupplyChainCost - metrics.targetCost) / metrics.targetCost * 100).toFixed(1)}% vs ${metrics.targetCost}M target
+                </p>
               </div>
-              <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
-                <TrendingUp className="h-6 w-6 text-green-600" />
+              <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                <DollarSign className="h-5 w-5 text-blue-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-gradient-to-br from-blue-50 to-cyan-50">
-          <CardContent className="p-6">
+        <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 shadow-sm">
+          <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-blue-700">Target Progress</p>
-                <p className="text-3xl font-bold text-blue-900">57%</p>
-                <p className="text-xs text-blue-600 mt-1">€6M to target</p>
+                <p className="text-sm font-medium text-green-700">YTD Cost Savings</p>
+                <p className="text-2xl font-bold text-green-900">${metrics.ytdSavings}M</p>
+                <p className="text-xs text-green-600 mt-1">From regionalization</p>
               </div>
-              <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
-                <BarChart3 className="h-6 w-6 text-blue-600" />
+              <div className="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
+                <TrendingDown className="h-5 w-5 text-green-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-gradient-to-br from-purple-50 to-violet-50">
-          <CardContent className="p-6">
+        <Card className="bg-gradient-to-br from-amber-50 to-orange-50 border-0 shadow-sm">
+          <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-purple-700">Active Alerts</p>
-                <p className="text-3xl font-bold text-purple-900">{unreadCount}</p>
-                <p className="text-xs text-purple-600 mt-1">Require attention</p>
+                <p className="text-sm font-medium text-amber-700">Commodity Exposure</p>
+                <p className="text-2xl font-bold text-amber-900">${metrics.commodityExposure}M</p>
+                <p className="text-xs text-amber-600 mt-1">{metrics.hedgedPercent}% hedged</p>
               </div>
-              <div className="h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center">
-                <Bell className="h-6 w-6 text-purple-600" />
+              <div className="h-10 w-10 bg-amber-100 rounded-full flex items-center justify-center">
+                <Package className="h-5 w-5 text-amber-600" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-gradient-to-br from-orange-50 to-amber-50">
-          <CardContent className="p-6">
+        <Card className="bg-gradient-to-br from-indigo-50 to-violet-50 border-0 shadow-sm">
+          <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-orange-700">Risk Score</p>
-                <p className="text-3xl font-bold text-orange-900">Medium</p>
-                <p className="text-xs text-orange-600 mt-1">2 high priority</p>
+                <p className="text-sm font-medium text-indigo-700">Regionalization</p>
+                <p className="text-2xl font-bold text-indigo-900">{metrics.regionalizationProgress}%</p>
+                <p className="text-xs text-indigo-600 mt-1">Target: 70% by 2027</p>
               </div>
-              <div className="h-12 w-12 bg-orange-100 rounded-full flex items-center justify-center">
-                <Shield className="h-6 w-6 text-orange-600" />
+              <div className="h-10 w-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                <Globe className="h-5 w-5 text-indigo-600" />
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* EBITDA Tracker */}
-      <Card
-        className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-white/80 backdrop-blur-sm"
-        onMouseEnter={() => setHoveredCard("ebitda")}
-        onMouseLeave={() => setHoveredCard(null)}
-      >
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center gap-3 text-xl">
-            <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-              <TrendingUp className="h-5 w-5 text-white" />
-            </div>
-            Real-time EBITDA Performance
+      {/* Regional Hub Status - Central Control View */}
+      <Card className="shadow-sm">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Globe className="h-5 w-5" />
+            Regional Hub Status
           </CardTitle>
-          <CardDescription className="text-base">Track progress toward €14M annual target</CardDescription>
+          <CardDescription>Real-time status of 4 manufacturing hubs</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex items-end justify-between">
@@ -357,20 +466,18 @@ export function HomeDashboard() {
                 <p className="text-xs text-slate-600">Inventory Turn</p>
                 <p className="text-sm font-semibold text-orange-600">4.2x</p>
               </div>
-            </div>
+            ))}
           </CardContent>
         </Card>
 
-        {/* Live Alerts */}
-        <Card className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3">
-              <div className="h-10 w-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Bell className="h-5 w-5 text-white" />
-              </div>
-              Live Alerts & Notifications
+        {/* Commodity Watch */}
+        <Card className="shadow-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Package className="h-5 w-5" />
+              Commodity Watch
             </CardTitle>
-            <CardDescription>Critical business events requiring immediate attention</CardDescription>
+            <CardDescription>Key material prices and hedge status</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* System Status Overview */}
@@ -512,56 +619,60 @@ export function HomeDashboard() {
         </Card>
       </div>
 
-      {/* Quick Actions */}
-      <Card className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
-              <Zap className="h-5 w-5 text-white" />
-            </div>
-            Quick Actions & Tools
+      {/* Cost Trend Chart */}
+      <Card className="shadow-sm">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <BarChart3 className="h-5 w-5" />
+            Monthly Cost vs Target
           </CardTitle>
-          <CardDescription>Execute critical business operations with one click</CardDescription>
+          <CardDescription>Supply chain cost performance (6-month trend)</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button
-              className="h-16 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-200"
-              onClick={() => setShowInventoryModal(true)}
-            >
-              <div className="flex flex-col items-center gap-2">
-                <Activity className="h-5 w-5" />
-                <span>Run Inventory Simulation</span>
-              </div>
-            </Button>
-            <Button
-              variant="outline"
-              className="h-16 border-2 hover:bg-slate-50 shadow-lg hover:shadow-xl transition-all duration-200 bg-transparent"
-              onClick={() => setShowFxModal(true)}
-            >
-              <div className="flex flex-col items-center gap-2">
-                <TrendingDown className="h-5 w-5" />
-                <span>Hedge FX Exposure</span>
-              </div>
-            </Button>
-            <Button
-              variant="outline"
-              className="h-16 border-2 hover:bg-slate-50 shadow-lg hover:shadow-xl transition-all duration-200 bg-transparent"
-              onClick={() => setShowForecastModal(true)}
-            >
-              <div className="flex flex-col items-center gap-2">
-                <BarChart3 className="h-5 w-5" />
-                <span>Generate Forecast</span>
-              </div>
-            </Button>
+          <ChartContainer config={chartConfig} className="h-48">
+            <AreaChart data={costTrend}>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200" />
+              <XAxis dataKey="month" className="text-xs" />
+              <YAxis className="text-xs" domain={[60, 75]} />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <Area 
+                type="monotone" 
+                dataKey="cost" 
+                stroke="#3b82f6" 
+                fill="#3b82f6"
+                fillOpacity={0.2}
+                strokeWidth={2}
+                name="Actual ($M)"
+              />
+              <Area 
+                type="monotone" 
+                dataKey="target" 
+                stroke="#22c55e" 
+                fill="#22c55e"
+                fillOpacity={0.1}
+                strokeWidth={2}
+                strokeDasharray="5 5"
+                name="Target ($M)"
+              />
+            </AreaChart>
+          </ChartContainer>
+          
+          <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t">
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">Avg Monthly Cost</p>
+              <p className="text-lg font-semibold">$70.4M</p>
+            </div>
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">vs Target</p>
+              <p className="text-lg font-semibold text-amber-600">+$2.1M</p>
+            </div>
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground">Trend</p>
+              <p className="text-lg font-semibold text-green-600">Improving</p>
+            </div>
           </div>
         </CardContent>
       </Card>
-      {/* Modals */}
-      <ReportGeneratorModal open={showReportModal} onOpenChange={setShowReportModal} />
-      <InventorySimulationModal open={showInventoryModal} onOpenChange={setShowInventoryModal} />
-      <FxHedgingModal open={showFxModal} onOpenChange={setShowFxModal} />
-      <ForecastGeneratorModal open={showForecastModal} onOpenChange={setShowForecastModal} />
     </div>
   )
 }
