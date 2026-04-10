@@ -136,42 +136,40 @@ export function HomeDashboard() {
   return (
     <div className="p-4 sm:p-6 space-y-6 bg-gradient-to-br from-slate-50 to-white min-h-screen">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <div className="text-2xl font-bold leading-tight tracking-tight text-slate-900 sm:text-3xl md:text-2xl lg:text-3xl">
-            <div className="flex min-w-0 items-center gap-2 sm:gap-2.5 md:gap-3">
-              <Image
-                src="/yamaha.jpeg"
-                alt="Yamaha"
-                width={640}
-                height={192}
-                className="h-[1.12em] w-auto shrink-0 object-contain object-left"
-                priority
-              />
-              <h1 className="min-w-0 text-balance">
-                Yamaha Global Executive Control System
-              </h1>
-            </div>
-          </div>
-          <div className="mt-2 flex items-center gap-2.5">
-            <span className="inline-flex items-center rounded-lg bg-gradient-to-r from-slate-100/95 via-sky-50/90 to-indigo-50/95 px-3 py-1.5 ring-1 ring-slate-200/80 shadow-sm">
-              <span className="text-base sm:text-lg font-semibold tracking-[0.055em] text-transparent bg-clip-text bg-gradient-to-r from-slate-950 via-blue-800 to-indigo-700">
-                by Arctic Wolves
-              </span>
+      <div className="flex flex-col items-center justify-center gap-3 text-center">
+        <Image
+          src="/yamahalogo.png"
+          alt="Yamaha"
+          width={720}
+          height={720}
+          className="h-12 w-auto object-contain sm:h-14 md:h-16"
+          priority
+        />
+
+        <h1 className="text-2xl font-bold leading-tight tracking-tight text-slate-900 sm:text-3xl md:text-2xl lg:text-3xl">
+          Global Executive Control System
+        </h1>
+
+        <div className="flex items-center justify-center">
+          <span className="inline-flex items-center rounded-lg bg-gradient-to-r from-slate-100/95 via-sky-50/90 to-indigo-50/95 px-3 py-1.5 ring-1 ring-slate-200/80 shadow-sm">
+            <span className="text-base sm:text-lg font-semibold tracking-[0.055em] text-transparent bg-clip-text bg-gradient-to-r from-slate-950 via-blue-800 to-indigo-700">
+              by Arctic Wolves
             </span>
-          </div>
-          <div className="flex items-center gap-3 mt-2">
-            <p className="text-slate-600">Executive Dashboard</p>
-            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-              <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-              Live
-            </Badge>
-            <span className="text-sm text-slate-500 font-mono">
-              {currentTime.toLocaleTimeString()}
-            </span>
-          </div>
+          </span>
         </div>
-        <div className="flex gap-2">
+
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
+          <p className="text-slate-600">Executive Dashboard</p>
+          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+            <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+            Live
+          </Badge>
+          <span className="text-sm text-slate-500 font-mono">
+            {currentTime.toLocaleTimeString()}
+          </span>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-2">
           <Badge variant="destructive" className="py-1 px-3">
             {criticalAlerts.filter(a => a.severity === "critical").length} Critical
           </Badge>
