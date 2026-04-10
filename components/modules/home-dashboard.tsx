@@ -137,7 +137,7 @@ export function HomeDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="max-[420px]:text-[0.9375rem] max-[420px]:tracking-tighter text-2xl leading-tight tracking-tight sm:text-3xl md:text-2xl lg:text-3xl font-bold text-slate-900">
+        <h1 className="text-2xl sm:text-2xl font-bold text-slate-900">
             Yamaha Global Supply Chain OS
           </h1>
           <div className="mt-2 flex items-center gap-2.5">
