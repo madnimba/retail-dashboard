@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { AlertTriangle, Bell, TrendingUp, TrendingDown, Activity, BarChart3, Zap, Shield, DollarSign, Globe, Clock, ChevronRight, MapPin, Ship, Factory, Package, ArrowUpRight, ArrowDownRight } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -137,9 +138,21 @@ export function HomeDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-        <h1 className="text-xl sm:text-xl font-bold text-slate-900">
-            Yamaha Global Supply Chain OS
-          </h1>
+          <div className="max-[420px]:text-[0.9375rem] max-[420px]:tracking-tighter text-lg font-bold leading-tight tracking-tight text-slate-900 sm:text-xl md:text-2xl lg:text-3xl">
+            <div className="flex min-w-0 items-center gap-2 sm:gap-2.5 md:gap-3">
+              <Image
+                src="/yamaha.jpeg"
+                alt="Yamaha"
+                width={320}
+                height={96}
+                className="h-[1.12em] w-auto shrink-0 object-contain object-left"
+                priority
+              />
+              <h1 className="min-w-0 text-balance">
+                Yamaha Global Executive Control System
+              </h1>
+            </div>
+          </div>
           <div className="mt-2 flex items-center gap-2.5">
             <span className="inline-flex items-center rounded-lg bg-gradient-to-r from-slate-100/95 via-sky-50/90 to-indigo-50/95 px-3 py-1.5 ring-1 ring-slate-200/80 shadow-sm">
               <span className="text-base sm:text-lg font-semibold tracking-[0.055em] text-transparent bg-clip-text bg-gradient-to-r from-slate-950 via-blue-800 to-indigo-700">
