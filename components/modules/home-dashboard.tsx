@@ -143,8 +143,8 @@ export function HomeDashboard() {
               <Image
                 src="/yamaha.jpeg"
                 alt="Yamaha"
-                width={320}
-                height={96}
+                width={640}
+                height={192}
                 className="h-[1.12em] w-auto shrink-0 object-contain object-left"
                 priority
               />
