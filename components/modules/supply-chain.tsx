@@ -1,6 +1,6 @@
 "use client"
 
-import { Package, Truck, AlertTriangle, CheckCircle, MapPin, Star, Clock, DollarSign, Shield, Users, Globe, Factory } from "lucide-react"
+import { Package, Truck, AlertTriangle, CheckCircle, MapPin, Star, Clock, DollarSign, Shield, Users, Globe, Factory, Ship, Plane, ArrowRight, RotateCcw, TrendingUp, TrendingDown, AlertCircle, Zap } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -8,70 +8,157 @@ import { Progress } from "@/components/ui/progress"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState, useMemo } from "react"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts"
 
 export function SupplyChain() {
   const [selectedRegion, setSelectedRegion] = useState("all")
   const [selectedCategory, setSelectedCategory] = useState("all")
 
+  // Shipment delay alerts
+  const shipmentAlerts = [
+    { 
+      id: 1, 
+      route: "Shanghai - Rotterdam", 
+      delay: "+7 days", 
+      reason: "Port congestion",
+      impact: "$1.2M",
+      severity: "critical",
+      eta: "Mar 28",
+      originalEta: "Mar 21"
+    },
+    { 
+      id: 2, 
+      route: "Vietnam - Los Angeles", 
+      delay: "+4 days", 
+      reason: "Weather delays",
+      impact: "$680K",
+      severity: "warning",
+      eta: "Mar 25",
+      originalEta: "Mar 21"
+    },
+    { 
+      id: 3, 
+      route: "Turkey - Hamburg", 
+      delay: "On time", 
+      reason: "",
+      impact: "",
+      severity: "good",
+      eta: "Mar 22",
+      originalEta: "Mar 22"
+    },
+    { 
+      id: 4, 
+      route: "Morocco - Barcelona", 
+      delay: "+2 days", 
+      reason: "Customs processing",
+      impact: "$240K",
+      severity: "info",
+      eta: "Mar 24",
+      originalEta: "Mar 22"
+    },
+  ]
+
+  // Route comparison data
+  const routeComparison = [
+    { 
+      route: "Asia Pacific Route",
+      regions: ["Vietnam", "Thailand", "Indonesia"],
+      avgCost: 2840,
+      avgTime: 28,
+      reliability: 91,
+      carbonFootprint: "High"
+    },
+    { 
+      route: "Turkey Hub Route",
+      regions: ["Istanbul", "Izmir", "Bursa"],
+      avgCost: 1860,
+      avgTime: 16,
+      reliability: 97,
+      carbonFootprint: "Medium"
+    },
+    { 
+      route: "Morocco Nearshore",
+      regions: ["Casablanca", "Tangier"],
+      avgCost: 1420,
+      avgTime: 12,
+      reliability: 93,
+      carbonFootprint: "Low"
+    },
+    { 
+      route: "Brazil Americas",
+      regions: ["Sao Paulo", "Minas Gerais"],
+      avgCost: 1680,
+      avgTime: 8,
+      reliability: 88,
+      carbonFootprint: "Low"
+    },
+  ]
+
+  // Rerouting suggestions
+  const reroutingSuggestions = [
+    {
+      id: 1,
+      current: "Shanghai - Rotterdam via Suez",
+      suggested: "Turkey - Hamburg direct",
+      timeSaved: "12 days",
+      costImpact: "+$420/container",
+      riskReduction: "High",
+      recommendation: "Recommended for urgent shipments"
+    },
+    {
+      id: 2,
+      current: "Vietnam - Los Angeles",
+      suggested: "Brazil - Miami + ground transport",
+      timeSaved: "8 days",
+      costImpact: "-$180/container",
+      riskReduction: "Medium",
+      recommendation: "Cost-effective alternative"
+    },
+    {
+      id: 3,
+      current: "Indonesia - Europe",
+      suggested: "Morocco - Europe nearshore",
+      timeSaved: "16 days",
+      costImpact: "+$280/container",
+      riskReduction: "High",
+      recommendation: "Best for supply chain resilience"
+    },
+  ]
+
+  const chartConfig = {
+    cost: { label: "Cost ($)", color: "#3b82f6" },
+    time: { label: "Time (days)", color: "#10b981" },
+  }
+
   // Generate supplier data based on filters
   const supplierData = useMemo(() => {
-    const baseSuppliers = {
-      region: {
-        all: [
-          { name: "Turkish Textile Co.", region: "Turkey", category: "Textiles", rating: 4.8, leadTime: 12, cost: 12, ethics: "A+", reliability: 98, capacity: 50000 },
-          { name: "Italian Denim Works", region: "Italy", category: "Denim", rating: 4.6, leadTime: 15, cost: 18, ethics: "B+", reliability: 95, capacity: 35000 },
-          { name: "German Cotton Mills", region: "Germany", category: "Cotton", rating: 4.9, leadTime: 8, cost: 15, ethics: "A+", reliability: 99, capacity: 40000 },
-          { name: "Spanish Wool Co.", region: "Spain", category: "Wool", rating: 4.4, leadTime: 14, cost: 22, ethics: "B+", reliability: 92, capacity: 25000 },
-          { name: "Polish Knitwear Ltd", region: "Poland", category: "Knitwear", rating: 4.7, leadTime: 10, cost: 14, ethics: "A", reliability: 96, capacity: 30000 },
-          { name: "Romanian Textiles", region: "Romania", category: "Textiles", rating: 4.3, leadTime: 16, cost: 11, ethics: "B", reliability: 89, capacity: 45000 }
-        ],
-        europe: [
-          { name: "German Cotton Mills", region: "Germany", category: "Cotton", rating: 4.9, leadTime: 8, cost: 15, ethics: "A+", reliability: 99, capacity: 40000 },
-          { name: "Italian Denim Works", region: "Italy", category: "Denim", rating: 4.6, leadTime: 15, cost: 18, ethics: "B+", reliability: 95, capacity: 35000 },
-          { name: "Spanish Wool Co.", region: "Spain", category: "Wool", rating: 4.4, leadTime: 14, cost: 22, ethics: "B+", reliability: 92, capacity: 25000 },
-          { name: "Polish Knitwear Ltd", region: "Poland", category: "Knitwear", rating: 4.7, leadTime: 10, cost: 14, ethics: "A", reliability: 96, capacity: 30000 }
-        ],
-        asia: [
-          { name: "Turkish Textile Co.", region: "Turkey", category: "Textiles", rating: 4.8, leadTime: 12, cost: 12, ethics: "A+", reliability: 98, capacity: 50000 },
-          { name: "Romanian Textiles", region: "Romania", category: "Textiles", rating: 4.3, leadTime: 16, cost: 11, ethics: "B", reliability: 89, capacity: 45000 }
-        ]
-      },
-      category: {
-        all: [
-          { name: "Turkish Textile Co.", region: "Turkey", category: "Textiles", rating: 4.8, leadTime: 12, cost: 12, ethics: "A+", reliability: 98, capacity: 50000 },
-          { name: "Italian Denim Works", region: "Italy", category: "Denim", rating: 4.6, leadTime: 15, cost: 18, ethics: "B+", reliability: 95, capacity: 35000 },
-          { name: "German Cotton Mills", region: "Germany", category: "Cotton", rating: 4.9, leadTime: 8, cost: 15, ethics: "A+", reliability: 99, capacity: 40000 },
-          { name: "Spanish Wool Co.", region: "Spain", category: "Wool", rating: 4.4, leadTime: 14, cost: 22, ethics: "B+", reliability: 92, capacity: 25000 },
-          { name: "Polish Knitwear Ltd", region: "Poland", category: "Knitwear", rating: 4.7, leadTime: 10, cost: 14, ethics: "A", reliability: 96, capacity: 30000 },
-          { name: "Romanian Textiles", region: "Romania", category: "Textiles", rating: 4.3, leadTime: 16, cost: 11, ethics: "B", reliability: 89, capacity: 45000 }
-        ],
-        textiles: [
-          { name: "Turkish Textile Co.", region: "Turkey", category: "Textiles", rating: 4.8, leadTime: 12, cost: 12, ethics: "A+", reliability: 98, capacity: 50000 },
-          { name: "Romanian Textiles", region: "Romania", category: "Textiles", rating: 4.3, leadTime: 16, cost: 11, ethics: "B", reliability: 89, capacity: 45000 }
-        ],
-        denim: [
-          { name: "Italian Denim Works", region: "Italy", category: "Denim", rating: 4.6, leadTime: 15, cost: 18, ethics: "B+", reliability: 95, capacity: 35000 }
-        ],
-        cotton: [
-          { name: "German Cotton Mills", region: "Germany", category: "Cotton", rating: 4.9, leadTime: 8, cost: 15, ethics: "A+", reliability: 99, capacity: 40000 }
-        ]
-      }
-    }
+    const baseSuppliers = [
+      { name: "Turkish Textile Co.", region: "Turkey", category: "Textiles", rating: 4.8, leadTime: 12, cost: 12, ethics: "A+", reliability: 98, capacity: 50000 },
+      { name: "Vietnam Manufacturing", region: "Vietnam", category: "Assembly", rating: 4.6, leadTime: 18, cost: 9, ethics: "A", reliability: 95, capacity: 75000 },
+      { name: "Morocco Nearshore", region: "Morocco", category: "Textiles", rating: 4.5, leadTime: 8, cost: 14, ethics: "A", reliability: 93, capacity: 35000 },
+      { name: "Brazil Components", region: "Brazil", category: "Components", rating: 4.3, leadTime: 6, cost: 16, ethics: "B+", reliability: 89, capacity: 25000 },
+      { name: "Thailand Premium", region: "Thailand", category: "Assembly", rating: 4.7, leadTime: 16, cost: 11, ethics: "A+", reliability: 96, capacity: 45000 },
+      { name: "Indonesia Textiles", region: "Indonesia", category: "Textiles", rating: 4.2, leadTime: 22, cost: 8, ethics: "B", reliability: 87, capacity: 60000 }
+    ]
 
-    // Filter suppliers based on selections
-    let filteredSuppliers = baseSuppliers.region.all
+    let filtered = baseSuppliers
 
     if (selectedRegion !== "all") {
-      filteredSuppliers = baseSuppliers.region[selectedRegion as keyof typeof baseSuppliers.region] || []
+      const regionMap: Record<string, string[]> = {
+        "asia": ["Vietnam", "Thailand", "Indonesia"],
+        "turkey": ["Turkey"],
+        "morocco": ["Morocco"],
+        "brazil": ["Brazil"]
+      }
+      filtered = filtered.filter(s => regionMap[selectedRegion]?.includes(s.region))
     }
 
     if (selectedCategory !== "all") {
-      filteredSuppliers = filteredSuppliers.filter(supplier => 
-        supplier.category.toLowerCase() === selectedCategory
-      )
+      filtered = filtered.filter(s => s.category.toLowerCase() === selectedCategory)
     }
 
-    return filteredSuppliers
+    return filtered
   }, [selectedRegion, selectedCategory])
 
   return (
@@ -79,7 +166,7 @@ export function SupplyChain() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold">Supply Chain Command Center</h1>
-          <p className="text-muted-foreground">Live operations monitoring</p>
+          <p className="text-muted-foreground">Live operations monitoring and route optimization</p>
         </div>
         <Dialog>
           <DialogTrigger asChild>
@@ -100,7 +187,6 @@ export function SupplyChain() {
             </DialogHeader>
             
             <div className="space-y-6">
-              {/* Filters */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm font-medium mb-2 block">Region</label>
@@ -110,8 +196,10 @@ export function SupplyChain() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Regions</SelectItem>
-                      <SelectItem value="europe">Europe</SelectItem>
-                      <SelectItem value="asia">Asia</SelectItem>
+                      <SelectItem value="asia">Southeast Asia</SelectItem>
+                      <SelectItem value="turkey">Turkey</SelectItem>
+                      <SelectItem value="morocco">Morocco</SelectItem>
+                      <SelectItem value="brazil">Brazil</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -124,18 +212,16 @@ export function SupplyChain() {
                     <SelectContent>
                       <SelectItem value="all">All Categories</SelectItem>
                       <SelectItem value="textiles">Textiles</SelectItem>
-                      <SelectItem value="denim">Denim</SelectItem>
-                      <SelectItem value="cotton">Cotton</SelectItem>
+                      <SelectItem value="assembly">Assembly</SelectItem>
+                      <SelectItem value="components">Components</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
 
-              {/* Supplier Results */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold">Found {supplierData.length} Suppliers</h3>
-                  <Badge variant="outline">{selectedRegion !== "all" ? selectedRegion.charAt(0).toUpperCase() + selectedRegion.slice(1) : "All"} - {selectedCategory !== "all" ? selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1) : "All Categories"}</Badge>
                 </div>
                 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -167,12 +253,12 @@ export function SupplyChain() {
                         <div className="flex items-center gap-2">
                           <DollarSign className="h-4 w-4 text-green-500" />
                           <div>
-                            <p className="text-sm font-medium">€{supplier.cost}/unit</p>
+                            <p className="text-sm font-medium">${supplier.cost}/unit</p>
                             <p className="text-xs text-muted-foreground">Cost</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Shield className="h-4 w-4 text-purple-500" />
+                          <Shield className="h-4 w-4 text-indigo-500" />
                           <div>
                             <p className="text-sm font-medium">{supplier.reliability}%</p>
                             <p className="text-xs text-muted-foreground">Reliability</p>
@@ -192,7 +278,7 @@ export function SupplyChain() {
                           className={supplier.ethics === "A+" ? "bg-green-600 text-white hover:bg-green-700" : 
                                     supplier.ethics === "A" ? "bg-blue-600 text-white hover:bg-blue-700" :
                                     supplier.ethics === "B+" ? "bg-yellow-600 text-black hover:bg-yellow-700" :
-                                    "bg-red-600 text-white hover:bg-red-700"}
+                                    "bg-amber-600 text-white hover:bg-amber-700"}
                         >
                           Ethics: {supplier.ethics}
                         </Badge>
@@ -204,80 +290,249 @@ export function SupplyChain() {
                   ))}
                 </div>
               </div>
-
-              {/* Summary Stats */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 bg-slate-50 rounded-lg">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-blue-600">
-                    {supplierData.length > 0 ? (supplierData.reduce((sum, s) => sum + s.rating, 0) / supplierData.length).toFixed(1) : 0}
-                  </p>
-                  <p className="text-sm text-muted-foreground">Avg Rating</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-green-600">
-                    {supplierData.length > 0 ? (supplierData.reduce((sum, s) => sum + s.leadTime, 0) / supplierData.length).toFixed(0) : 0}
-                  </p>
-                  <p className="text-sm text-muted-foreground">Avg Lead Time (days)</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-purple-600">
-                    {supplierData.length > 0 ? (supplierData.reduce((sum, s) => sum + s.cost, 0) / supplierData.length).toFixed(0) : 0}
-                  </p>
-                  <p className="text-sm text-muted-foreground">Avg Cost (€/unit)</p>
-                </div>
-              </div>
             </div>
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Shipment Delay Alerts - NEW */}
+      <Card className="border-l-4 border-l-amber-500">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-amber-500" />
+            Shipment Delay Alerts
+            <Badge variant="destructive" className="ml-2">4 Active</Badge>
+          </CardTitle>
+          <CardDescription>Real-time shipment status and delay notifications</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {shipmentAlerts.map((alert) => (
+              <div 
+                key={alert.id} 
+                className={`p-4 rounded-lg border flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                  alert.severity === "critical" ? "bg-red-50 border-red-200" :
+                  alert.severity === "warning" ? "bg-amber-50 border-amber-200" :
+                  alert.severity === "info" ? "bg-blue-50 border-blue-200" :
+                  "bg-green-50 border-green-200"
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <div className={`mt-0.5 ${
+                    alert.severity === "critical" ? "text-red-600" :
+                    alert.severity === "warning" ? "text-amber-600" :
+                    alert.severity === "info" ? "text-blue-600" :
+                    "text-green-600"
+                  }`}>
+                    {alert.severity === "good" ? <CheckCircle className="h-5 w-5" /> :
+                     alert.severity === "critical" ? <AlertTriangle className="h-5 w-5" /> :
+                     <AlertCircle className="h-5 w-5" />}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <Ship className="h-4 w-4 text-slate-500" />
+                      <span className="font-medium">{alert.route}</span>
+                    </div>
+                    {alert.reason && (
+                      <p className="text-sm text-muted-foreground mt-1">{alert.reason}</p>
+                    )}
+                    <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                      <span>Original ETA: {alert.originalEta}</span>
+                      <span>New ETA: {alert.eta}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge 
+                    variant="outline" 
+                    className={
+                      alert.severity === "critical" ? "bg-red-100 text-red-700 border-red-300" :
+                      alert.severity === "warning" ? "bg-amber-100 text-amber-700 border-amber-300" :
+                      alert.severity === "info" ? "bg-blue-100 text-blue-700 border-blue-300" :
+                      "bg-green-100 text-green-700 border-green-300"
+                    }
+                  >
+                    {alert.delay}
+                  </Badge>
+                  {alert.impact && (
+                    <Badge variant="destructive">{alert.impact}</Badge>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Route Comparison - ENHANCED */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Truck className="h-5 w-5" />
+            Route Comparison: Cost vs Time
+          </CardTitle>
+          <CardDescription>Compare routes across regions for optimal logistics decisions</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <ChartContainer config={chartConfig} className="h-48">
+              <BarChart data={routeComparison}>
+                <CartesianGrid strokeDasharray="3 3" className="stroke-slate-200" />
+                <XAxis dataKey="route" className="text-xs" tick={{ fontSize: 10 }} />
+                <YAxis yAxisId="left" className="text-xs" />
+                <YAxis yAxisId="right" orientation="right" className="text-xs" />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Bar yAxisId="left" dataKey="avgCost" fill="#3b82f6" name="Avg Cost ($)" radius={[4, 4, 0, 0]} />
+                <Bar yAxisId="right" dataKey="avgTime" fill="#10b981" name="Avg Time (days)" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ChartContainer>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {routeComparison.map((route, index) => (
+                <div key={index} className="p-4 border rounded-lg hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      {route.route.includes("Asia") ? <Ship className="h-4 w-4 text-blue-500" /> :
+                       route.route.includes("Turkey") ? <Truck className="h-4 w-4 text-amber-500" /> :
+                       <Plane className="h-4 w-4 text-green-500" />}
+                      <span className="font-medium">{route.route}</span>
+                    </div>
+                    <Badge 
+                      variant="outline" 
+                      className={
+                        route.carbonFootprint === "Low" ? "bg-green-50 text-green-700 border-green-200" :
+                        route.carbonFootprint === "Medium" ? "bg-amber-50 text-amber-700 border-amber-200" :
+                        "bg-red-50 text-red-700 border-red-200"
+                      }
+                    >
+                      {route.carbonFootprint} Carbon
+                    </Badge>
+                  </div>
+                  <div className="grid grid-cols-4 gap-2 text-sm">
+                    <div>
+                      <p className="text-muted-foreground text-xs">Avg Cost</p>
+                      <p className="font-semibold">${route.avgCost}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-xs">Avg Time</p>
+                      <p className="font-semibold">{route.avgTime}d</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-xs">Reliability</p>
+                      <p className="font-semibold">{route.reliability}%</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-xs">Regions</p>
+                      <p className="font-semibold">{route.regions.length}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Suggested Rerouting Insights - NEW */}
+      <Card className="border-l-4 border-l-blue-500">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Zap className="h-5 w-5 text-blue-500" />
+            Suggested Rerouting Insights
+          </CardTitle>
+          <CardDescription>AI-powered route optimization recommendations</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {reroutingSuggestions.map((suggestion) => (
+              <div key={suggestion.id} className="p-4 border rounded-lg bg-gradient-to-r from-blue-50 to-white">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Badge variant="outline" className="bg-slate-100">Current</Badge>
+                      <span className="text-sm font-medium">{suggestion.current}</span>
+                    </div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <ArrowRight className="h-4 w-4 text-blue-500" />
+                      <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-300">Suggested</Badge>
+                      <span className="text-sm font-medium">{suggestion.suggested}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">{suggestion.recommendation}</p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div className="text-center p-2 bg-white rounded border">
+                      <p className="text-xs text-muted-foreground">Time Saved</p>
+                      <p className="font-semibold text-green-600">{suggestion.timeSaved}</p>
+                    </div>
+                    <div className="text-center p-2 bg-white rounded border">
+                      <p className="text-xs text-muted-foreground">Cost Impact</p>
+                      <p className={`font-semibold ${suggestion.costImpact.startsWith("-") ? "text-green-600" : "text-amber-600"}`}>
+                        {suggestion.costImpact}
+                      </p>
+                    </div>
+                    <div className="text-center p-2 bg-white rounded border">
+                      <p className="text-xs text-muted-foreground">Risk Reduction</p>
+                      <Badge 
+                        className={
+                          suggestion.riskReduction === "High" ? "bg-green-600 text-white" :
+                          suggestion.riskReduction === "Medium" ? "bg-amber-600 text-white" :
+                          "bg-slate-600 text-white"
+                        }
+                      >
+                        {suggestion.riskReduction}
+                      </Badge>
+                    </div>
+                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                      <RotateCcw className="h-4 w-4 mr-1" />
+                      Apply
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* RFID Inventory Tracker */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Package className="h-5 w-5" />
-            RFID Inventory Tracker
+            Inventory Tracker
           </CardTitle>
-          <CardDescription>Stock levels by store with lead time warnings</CardDescription>
+          <CardDescription>Stock levels by facility with lead time warnings</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="p-4 border rounded-lg">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium">Store #12</span>
+                  <span className="font-medium">Turkey Hub</span>
                   <Badge variant="destructive">Critical</Badge>
                 </div>
-                <p className="text-sm text-muted-foreground mb-2">Jeans - Premium</p>
+                <p className="text-sm text-muted-foreground mb-2">Engine Components</p>
                 <Progress value={15} className="h-2 mb-2" />
-                <p className="text-xs text-muted-foreground">15 units remaining</p>
+                <p className="text-xs text-muted-foreground">340 units remaining - Reorder triggered</p>
               </div>
               <div className="p-4 border rounded-lg">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium">Store #08</span>
+                  <span className="font-medium">Vietnam DC</span>
                   <Badge variant="secondary">Low</Badge>
                 </div>
-                <p className="text-sm text-muted-foreground mb-2">Hoodies - Casual</p>
+                <p className="text-sm text-muted-foreground mb-2">Frame Assembly Parts</p>
                 <Progress value={35} className="h-2 mb-2" />
-                <p className="text-xs text-muted-foreground">87 units remaining</p>
+                <p className="text-xs text-muted-foreground">1,240 units remaining</p>
               </div>
               <div className="p-4 border rounded-lg">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium">Store #15</span>
+                  <span className="font-medium">Morocco Facility</span>
                   <Badge variant="outline">Good</Badge>
                 </div>
-                <p className="text-sm text-muted-foreground mb-2">T-Shirts - Basic</p>
+                <p className="text-sm text-muted-foreground mb-2">Electronics Modules</p>
                 <Progress value={78} className="h-2 mb-2" />
-                <p className="text-xs text-muted-foreground">234 units remaining</p>
+                <p className="text-xs text-muted-foreground">4,560 units remaining</p>
               </div>
-            </div>
-
-            <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                <span className="font-medium text-yellow-800">Asian shipment delayed: +5 days</span>
-              </div>
-              <p className="text-sm text-yellow-700 mt-1">Expected delivery: March 15th → March 20th</p>
             </div>
           </div>
         </CardContent>
@@ -287,10 +542,10 @@ export function SupplyChain() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Truck className="h-5 w-5" />
+            <Star className="h-5 w-5" />
             Supplier Scorecards
           </CardTitle>
-          <CardDescription>Ethics audits + cost/performance rankings</CardDescription>
+          <CardDescription>Performance rankings and compliance audits</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -299,11 +554,12 @@ export function SupplyChain() {
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div>
                     <h4 className="font-medium">Turkish Textile Co.</h4>
-                    <p className="text-sm text-muted-foreground">Cotton & Denim</p>
+                    <p className="text-sm text-muted-foreground">Primary Supplier - Textiles</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <Badge className="bg-green-600 text-white hover:bg-green-700">Ethics: A+</Badge>
-                    <Badge variant="secondary">Cost: €12/unit</Badge>
+                    <Badge variant="secondary">Cost: $12/unit</Badge>
+                    <Badge variant="outline" className="bg-blue-50 text-blue-700">Lead: 12 days</Badge>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -315,89 +571,36 @@ export function SupplyChain() {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border rounded-lg gap-4">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div>
-                    <h4 className="font-medium">Polish Manufacturing</h4>
-                    <p className="text-sm text-muted-foreground">Outerwear & Accessories</p>
+                    <h4 className="font-medium">Vietnam Manufacturing Ltd</h4>
+                    <p className="text-sm text-muted-foreground">Secondary Supplier - Assembly</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <Badge className="bg-yellow-600 text-black hover:bg-yellow-700">Ethics: B+</Badge>
-                    <Badge variant="secondary">Cost: €18/unit</Badge>
+                    <Badge className="bg-blue-600 text-white hover:bg-blue-700">Ethics: A</Badge>
+                    <Badge variant="secondary">Cost: $9/unit</Badge>
+                    <Badge variant="outline" className="bg-amber-50 text-amber-700">Lead: 18 days</Badge>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="text-sm font-medium">94% On-time</span>
+                  <span className="text-sm font-medium">95% On-time</span>
                 </div>
               </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
-      {/* NRV Calculator */}
-      <Card>
-        <CardHeader>
-          <CardTitle>NRV Calculator</CardTitle>
-          <CardDescription>Net Realizable Value for write-down scenarios</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-              <h4 className="font-medium text-red-800">Slow-Moving Inventory</h4>
-              <p className="text-2xl font-bold text-red-600">€125K</p>
-              <p className="text-sm text-muted-foreground">Potential write-down</p>
-              <p className="text-xs text-muted-foreground mt-1">Winter collection - 45% markdown</p>
-            </div>
-            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-              <h4 className="font-medium text-green-800">Fast-Moving Inventory</h4>
-              <p className="text-2xl font-bold text-green-600">€890K</p>
-              <p className="text-sm text-muted-foreground">Full value realization</p>
-              <p className="text-xs text-muted-foreground mt-1">Spring collection - 98% sell-through</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Regional Supplier Comparison */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Regional Supplier Analysis</CardTitle>
-          <CardDescription>Turkey/Poland freight cost comparisons</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-medium mb-2">Turkey Route</h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-sm">Freight Cost</span>
-                    <span className="text-sm font-medium">€2.50/unit</span>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 border rounded-lg gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                  <div>
+                    <h4 className="font-medium">Morocco Nearshore Co.</h4>
+                    <p className="text-sm text-muted-foreground">Growing Supplier - Textiles</p>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Lead Time</span>
-                    <span className="text-sm font-medium">12 days</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Capacity</span>
-                    <span className="text-sm font-medium">50K units/month</span>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge className="bg-blue-600 text-white hover:bg-blue-700">Ethics: A</Badge>
+                    <Badge variant="secondary">Cost: $14/unit</Badge>
+                    <Badge variant="outline" className="bg-green-50 text-green-700">Lead: 8 days</Badge>
                   </div>
                 </div>
-              </div>
-              <div className="p-4 border rounded-lg">
-                <h4 className="font-medium mb-2">Poland Route</h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-sm">Freight Cost</span>
-                    <span className="text-sm font-medium">€1.80/unit</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Lead Time</span>
-                    <span className="text-sm font-medium">8 days</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm">Capacity</span>
-                    <span className="text-sm font-medium">35K units/month</span>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-amber-500" />
+                  <span className="text-sm font-medium">93% On-time</span>
                 </div>
               </div>
             </div>

@@ -5,7 +5,7 @@ import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sid
 import { AppSidebar } from "@/components/app-sidebar"
 import { DashboardContent } from "@/components/dashboard-content"
 import { NotificationProvider } from "@/components/notification-provider"
-import { Menu, X } from "lucide-react"
+import { Menu, Home, Globe, Ship, Zap, Calculator, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
@@ -15,12 +15,12 @@ function MobileNavigation({ activeModule, setActiveModule }: { activeModule: str
   const [isOpen, setIsOpen] = useState(false)
 
   const modules = [
-    { id: "home", title: "Dashboard", icon: "🏠" },
-    { id: "consumer", title: "Consumer", icon: "👥" },
-    { id: "financial", title: "Financial", icon: "💰" },
-    { id: "supply", title: "Supply Chain", icon: "🏭" },
-    { id: "ecommerce", title: "E-commerce", icon: "🛒" },
-    { id: "sandbox", title: "Sandbox", icon: "🧪" },
+    { id: "home", title: "Dashboard", icon: Home },
+    { id: "regional", title: "Regional", icon: Globe },
+    { id: "supply", title: "Command Center", icon: Ship },
+    { id: "sandbox", title: "Sandbox", icon: Zap },
+    { id: "financial", title: "Financial", icon: Calculator },
+    { id: "alerts", title: "Alerts", icon: AlertTriangle },
   ]
 
   if (!isMobile) return null
@@ -39,11 +39,11 @@ function MobileNavigation({ activeModule, setActiveModule }: { activeModule: str
               <SheetHeader className="px-4 py-6 border-b bg-gradient-to-r from-slate-900 to-slate-800 text-white">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <span className="text-white text-lg">📈</span>
+                    <Ship className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <SheetTitle className="text-xl font-bold text-white">SmartWear</SheetTitle>
-                    <p className="text-xs text-slate-300">by Team Arctic Wolves</p>
+                    <SheetTitle className="text-xl font-bold text-white">Yamaha</SheetTitle>
+                    <p className="text-xs text-slate-300">Supply Chain OS</p>
                   </div>
                 </div>
               </SheetHeader>
@@ -59,7 +59,7 @@ function MobileNavigation({ activeModule, setActiveModule }: { activeModule: str
                         setIsOpen(false)
                       }}
                     >
-                      <span className="text-lg">{module.icon}</span>
+                      <module.icon className="h-5 w-5" />
                       <span className="font-medium">{module.title}</span>
                     </Button>
                   ))}

@@ -1,6 +1,6 @@
 "use client"
 
-import { Building2, Calculator, Home, ShoppingCart, TrendingUp, Users, Zap, LogOut } from "lucide-react"
+import { Building2, Calculator, Home, Globe, TrendingUp, Bell, Zap, LogOut, Ship, AlertTriangle } from "lucide-react"
 
 import {
   Sidebar,
@@ -23,43 +23,43 @@ const modules = [
     id: "home",
     title: "Executive Dashboard",
     icon: Home,
-    description: "KPIs & Real-time Alerts",
+    description: "KPIs & Real-time Monitoring",
     badge: "Live",
   },
   {
-    id: "consumer",
-    title: "Consumer Insights",
-    icon: Users,
-    description: "CDMS Analytics & Insights",
-    badge: null,
-  },
-  {
-    id: "financial",
-    title: "Financial Planning",
-    icon: Calculator,
-    description: "Forecasting & Scenarios",
+    id: "regional",
+    title: "Regional Performance",
+    icon: Globe,
+    description: "Hub Analytics & Drill-down",
     badge: null,
   },
   {
     id: "supply",
-    title: "Supply Chain Hub",
-    icon: Building2,
-    description: "Operations & Logistics",
-    badge: "3",
-  },
-  {
-    id: "ecommerce",
-    title: "Digital Commerce",
-    icon: ShoppingCart,
-    description: "Omnichannel Performance",
-    badge: null,
+    title: "Command Center",
+    icon: Ship,
+    description: "Operations & Routes",
+    badge: "4",
   },
   {
     id: "sandbox",
-    title: "Strategy Sandbox",
+    title: "Scenario Sandbox",
     icon: Zap,
-    description: "Scenario Testing",
+    description: "Stress Testing & Simulation",
     badge: null,
+  },
+  {
+    id: "financial",
+    title: "Financial Engine",
+    icon: Calculator,
+    description: "EBITDA & NPV Modeling",
+    badge: null,
+  },
+  {
+    id: "alerts",
+    title: "Alerts & Actions",
+    icon: AlertTriangle,
+    description: "Response System",
+    badge: "3",
   },
 ]
 
@@ -77,8 +77,8 @@ export function AppSidebar({ activeModule, setActiveModule }: AppSidebarProps) {
             <TrendingUp className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold">SmartWear</h2>
-            <p className="text-xs text-slate-300">by Team Arctic Wolves</p>
+            <h2 className="text-xl font-bold">Yamaha</h2>
+            <p className="text-xs text-slate-300">Supply Chain OS</p>
           </div>
         </div>
       </SidebarHeader>
@@ -86,7 +86,7 @@ export function AppSidebar({ activeModule, setActiveModule }: AppSidebarProps) {
       <SidebarContent className="px-2 py-4">
         <SidebarGroup>
           <SidebarGroupLabel className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mb-2">
-            Analytics Modules
+            Operations Modules
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
@@ -111,7 +111,14 @@ export function AppSidebar({ activeModule, setActiveModule }: AppSidebarProps) {
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-semibold text-slate-900">{module.title}</span>
                           {module.badge && (
-                            <Badge variant={module.badge === "Live" ? "default" : "secondary"} className="text-xs h-5">
+                            <Badge 
+                              variant={module.badge === "Live" ? "default" : "secondary"} 
+                              className={`text-xs h-5 ${
+                                module.badge === "Live" ? "bg-green-600 text-white" :
+                                module.id === "alerts" ? "bg-red-100 text-red-700" :
+                                "bg-amber-100 text-amber-700"
+                              }`}
+                            >
                               {module.badge}
                             </Badge>
                           )}
@@ -134,12 +141,12 @@ export function AppSidebar({ activeModule, setActiveModule }: AppSidebarProps) {
               <Avatar className="h-10 w-10 ring-2 ring-blue-100">
                 <AvatarImage src="/placeholder.svg?height=40&width=40" />
                 <AvatarFallback className="bg-gradient-to-br from-blue-500 to-blue-600 text-white font-semibold">
-                  JD
+                  YM
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <span className="text-sm font-semibold text-slate-900">Team Arctic Wolves</span>
-                <p className="text-xs text-slate-500">Chief Financial Officer</p>
+                <span className="text-sm font-semibold text-slate-900">Operations Team</span>
+                <p className="text-xs text-slate-500">Supply Chain Director</p>
               </div>
               <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600">
                 <LogOut className="h-4 w-4" />
